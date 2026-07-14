@@ -10,7 +10,7 @@
 ## Phase 1: Backend Foundation & Auth (Days 1-7)
 
 ### Day 1: User Authentication & JWT
-- [ ] **Daytime Learning:** Understand JWT (JSON Web Tokens), access vs. refresh tokens, and DRF SimpleJWT.
+- [x] **Daytime Learning:** Understand JWT (JSON Web Tokens), access vs. refresh tokens, and DRF SimpleJWT.
 - [ ] **Nighttime Doc:** Write down key concepts learned today.
 - [ ] **Commit 1:** Set up custom User model in Django (if not done).
 - [ ] **Commit 2:** Install and configure `djangorestframework-simplejwt`.

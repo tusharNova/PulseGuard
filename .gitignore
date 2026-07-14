@@ -36,3 +36,5 @@ htmlcov/
 # Build
 build/
 dist/
+
+gemini.md
