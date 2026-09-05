@@ -19,13 +19,13 @@
 - [x] **Commit 5:** Update API documentation for Auth.
 
 ### Day 2: The Core "Monitor" Model
-- [ ] **Daytime Learning:** Django ORM, designing database schemas, RESTful API design.
-- [ ] **Nighttime Doc:** Write down key concepts learned today.
-- [ ] **Commit 1:** Create the `Monitor` model (fields: name, url, type, interval, is_active).
-- [ ] **Commit 2:** Create DRF Serializers for the `Monitor` model.
-- [ ] **Commit 3:** Create ViewSets for CRUD operations.
-- [ ] **Commit 4:** Add permissions so users only see their own monitors.
-- [ ] **Commit 5:** Test Monitor API and commit fixes.
+- [x] **Daytime Learning:** Django ORM, designing database schemas, RESTful API design.
+- [x] **Nighttime Doc:** Write down key concepts learned today.
+- [x] **Commit 1:** Create the `Monitor` model (fields: name, url, type, interval, is_active).
+- [x] **Commit 2:** Create DRF Serializers for the `Monitor` model.
+- [x] **Commit 3:** Create ViewSets for CRUD operations.
+- [x] **Commit 4:** Add permissions so users only see their own monitors.
+- [x] **Commit 5:** Test Monitor API and commit fixes.
 
 ### Day 3: Tracking Uptime - "Check Result" Model
 - [ ] **Daytime Learning:** Database indexing for time-series data and Django foreign keys.
