@@ -11,12 +11,12 @@
 
 ### Day 1: User Authentication & JWT
 - [x] **Daytime Learning:** Understand JWT (JSON Web Tokens), access vs. refresh tokens, and DRF SimpleJWT.
-- [ ] **Nighttime Doc:** Write down key concepts learned today.
-- [ ] **Commit 1:** Set up custom User model in Django (if not done).
-- [ ] **Commit 2:** Install and configure `djangorestframework-simplejwt`.
-- [ ] **Commit 3:** Create login API endpoint.
-- [ ] **Commit 4:** Create register API endpoint and test via Postman.
-- [ ] **Commit 5:** Update API documentation for Auth.
+- [x] **Nighttime Doc:** Write down key concepts learned today.
+- [x] **Commit 1:** Set up custom User model in Django (if not done).
+- [x] **Commit 2:** Install and configure `djangorestframework-simplejwt`.
+- [x] **Commit 3:** Create login API endpoint.
+- [x] **Commit 4:** Create register API endpoint and test via Postman.
+- [x] **Commit 5:** Update API documentation for Auth.
 
 ### Day 2: The Core "Monitor" Model
 - [ ] **Daytime Learning:** Django ORM, designing database schemas, RESTful API design.
