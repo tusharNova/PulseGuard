@@ -46,13 +46,13 @@
 - [x] **Commit 5:** Document how to start the Celery worker in README.
 
 ### Day 5: The Pinger Task
-- [ ] **Daytime Learning:** Python `requests` library, HTTP status codes, exception handling.
-- [ ] **Nighttime Doc:** Write down key concepts learned today.
-- [ ] **Commit 1:** Write Celery task to make HTTP GET request to a URL.
-- [ ] **Commit 2:** Add exception handling (timeouts, DNS failures) to the task.
-- [ ] **Commit 3:** Measure response time in the task.
-- [ ] **Commit 4:** Save the ping result into the `CheckResult` model.
-- [ ] **Commit 5:** Test the task manually from the Django shell and fix bugs.
+- [x] **Daytime Learning:** Python `requests` library, HTTP status codes, exception handling.
+- [x] **Nighttime Doc:** Write down key concepts learned today.
+- [x] **Commit 1:** Write Celery task to make HTTP GET request to a URL.
+- [x] **Commit 2:** Add exception handling (timeouts, DNS failures) to the task.
+- [x] **Commit 3:** Measure response time in the task.
+- [x] **Commit 4:** Save the ping result into the `CheckResult` model.
+- [x] **Commit 5:** Test the task manually from the Django shell and fix bugs.
 
 ### Day 6: Scheduling with Celery Beat
 - [ ] **Daytime Learning:** Cron jobs, task scheduling, and `celery-beat`.
