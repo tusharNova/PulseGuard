@@ -1,8 +1,11 @@
+from unittest import mock
+import requests
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 from .models import CheckResult, Monitor
+from .tasks import ping_monitor_task
 
 User = get_user_model()
 
@@ -103,10 +106,14 @@ class MonitorAPITests(APITestCase):
             name="Payment API",
             url="https://pay.gateway.io",
         )
-        # Create 3 check results
-        CheckResult.objects.create(monitor=monitor, status_code=200, response_time_ms=120.0, is_up=True)
-        CheckResult.objects.create(monitor=monitor, status_code=500, response_time_ms=250.0, is_up=False)
-        CheckResult.objects.create(monitor=monitor, status_code=200, response_time_ms=110.0, is_up=True)
+        from django.utils import timezone
+        import datetime
+
+        now = timezone.now()
+        # Create 3 check results with distinct timestamps
+        CheckResult.objects.create(monitor=monitor, status_code=200, response_time_ms=120.0, is_up=True, timestamp=now - datetime.timedelta(minutes=2))
+        CheckResult.objects.create(monitor=monitor, status_code=500, response_time_ms=250.0, is_up=False, timestamp=now - datetime.timedelta(minutes=1))
+        CheckResult.objects.create(monitor=monitor, status_code=200, response_time_ms=110.0, is_up=True, timestamp=now)
 
         history_url = reverse("monitoring:monitor-history", kwargs={"pk": monitor.id})
 
@@ -129,4 +136,67 @@ class MonitorAPITests(APITestCase):
         self.client.force_authenticate(user=self.user2)
         response = self.client.get(history_url)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+
+class PingerTaskTests(APITestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(
+            email="tester@pulseguard.io",
+            password="TesterPassword123!",
+        )
+        self.monitor = Monitor.objects.create(
+            user=self.user,
+            name="Google Health",
+            url="https://google.com",
+            interval=60,
+        )
+
+    @mock.patch("requests.get")
+    def test_ping_success_200(self, mock_get):
+        mock_response = mock.Mock()
+        mock_response.status_code = 200
+        mock_get.return_value = mock_response
+
+        result = ping_monitor_task(str(self.monitor.id))
+        self.assertTrue(result["is_up"])
+        self.assertEqual(result["status_code"], 200)
+        self.assertGreater(result["response_time_ms"], 0)
+
+        # Confirm saved in database
+        check = CheckResult.objects.get(id=result["check_result_id"])
+        self.assertTrue(check.is_up)
+        self.assertEqual(check.status_code, 200)
+
+    @mock.patch("requests.get")
+    def test_ping_failure_500(self, mock_get):
+        mock_response = mock.Mock()
+        mock_response.status_code = 500
+        mock_get.return_value = mock_response
+
+        result = ping_monitor_task(str(self.monitor.id))
+        self.assertFalse(result["is_up"])
+        self.assertEqual(result["status_code"], 500)
+        self.assertIn("500", result["error_message"])
+
+    @mock.patch("requests.get", side_effect=requests.exceptions.Timeout)
+    def test_ping_timeout(self, mock_get):
+        result = ping_monitor_task(str(self.monitor.id))
+        self.assertFalse(result["is_up"])
+        self.assertIsNone(result["status_code"])
+        self.assertIn("timed out", result["error_message"].lower())
+
+    @mock.patch("requests.get", side_effect=requests.exceptions.ConnectionError("DNS failure"))
+    def test_ping_connection_error(self, mock_get):
+        result = ping_monitor_task(str(self.monitor.id))
+        self.assertFalse(result["is_up"])
+        self.assertIsNone(result["status_code"])
+        self.assertIn("connection failed", result["error_message"].lower())
+
+    def test_ping_inactive_monitor_skipped(self):
+        self.monitor.is_active = False
+        self.monitor.save()
+
+        result = ping_monitor_task(str(self.monitor.id))
+        self.assertEqual(result["status"], "skipped")
+        self.assertEqual(self.monitor.check_results.count(), 0)
 
