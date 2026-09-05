@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Monitor
+from .models import CheckResult, Monitor
 
 
 class MonitorSerializer(serializers.ModelSerializer):
@@ -21,3 +21,18 @@ class MonitorSerializer(serializers.ModelSerializer):
         if value < 10:
             raise serializers.ValidationError("Monitoring interval must be at least 10 seconds.")
         return value
+
+
+class CheckResultSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CheckResult
+        fields = (
+            "id",
+            "monitor",
+            "timestamp",
+            "status_code",
+            "response_time_ms",
+            "is_up",
+            "error_message",
+        )
+        read_only_fields = fields
