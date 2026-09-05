@@ -37,13 +37,13 @@
 - [x] **Commit 5:** Document the new API endpoints.
 
 ### Day 4: Introduction to Celery & Redis
-- [ ] **Daytime Learning:** Message brokers, background jobs, and how Celery uses Redis.
-- [ ] **Nighttime Doc:** Write down key concepts learned today.
-- [ ] **Commit 1:** Install Redis locally and verify it's running.
-- [ ] **Commit 2:** Install Celery and configure `settings.py`.
-- [ ] **Commit 3:** Create a simple test task (e.g., adding numbers).
-- [ ] **Commit 4:** Verify the worker processes the task.
-- [ ] **Commit 5:** Document how to start the Celery worker in README.
+- [x] **Daytime Learning:** Message brokers, background jobs, and how Celery uses Redis.
+- [x] **Nighttime Doc:** Write down key concepts learned today.
+- [x] **Commit 1:** Install Redis locally and verify it's running.
+- [x] **Commit 2:** Install Celery and configure `settings.py`.
+- [x] **Commit 3:** Create a simple test task (e.g., adding numbers).
+- [x] **Commit 4:** Verify the worker processes the task.
+- [x] **Commit 5:** Document how to start the Celery worker in README.
 
 ### Day 5: The Pinger Task
 - [ ] **Daytime Learning:** Python `requests` library, HTTP status codes, exception handling.
