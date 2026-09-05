@@ -1,6 +1,8 @@
 from rest_framework import permissions, viewsets
+from rest_framework.decorators import action
+from rest_framework.response import Response
 from .models import Monitor
-from .serializers import MonitorSerializer
+from .serializers import CheckResultSerializer, MonitorSerializer
 
 
 class MonitorViewSet(viewsets.ModelViewSet):
@@ -18,3 +20,13 @@ class MonitorViewSet(viewsets.ModelViewSet):
         Auto-bind the authenticated user as the owner of the newly created monitor.
         """
         serializer.save(user=self.request.user)
+
+    @action(detail=True, methods=["get"], url_path="history")
+    def history(self, request, pk=None):
+        """
+        Retrieve recent check results for this monitor (capped at latest 50).
+        """
+        monitor = self.get_object()
+        results = monitor.check_results.all()[:50]
+        serializer = CheckResultSerializer(results, many=True)
+        return Response(serializer.data)
