@@ -28,13 +28,13 @@
 - [x] **Commit 5:** Test Monitor API and commit fixes.
 
 ### Day 3: Tracking Uptime - "Check Result" Model
-- [ ] **Daytime Learning:** Database indexing for time-series data and Django foreign keys.
-- [ ] **Nighttime Doc:** Write down key concepts learned today.
-- [ ] **Commit 1:** Create the `CheckResult` model (fields: monitor_id, timestamp, status_code, response_time, is_up).
-- [ ] **Commit 2:** Set up Foreign Key relationship to the `Monitor` model.
-- [ ] **Commit 3:** Create API endpoint to fetch recent results for a monitor.
-- [ ] **Commit 4:** Set up Django Admin interface for these models.
-- [ ] **Commit 5:** Document the new API endpoints.
+- [x] **Daytime Learning:** Database indexing for time-series data and Django foreign keys.
+- [x] **Nighttime Doc:** Write down key concepts learned today.
+- [x] **Commit 1:** Create the `CheckResult` model (fields: monitor_id, timestamp, status_code, response_time, is_up).
+- [x] **Commit 2:** Set up Foreign Key relationship to the `Monitor` model.
+- [x] **Commit 3:** Create API endpoint to fetch recent results for a monitor.
+- [x] **Commit 4:** Set up Django Admin interface for these models.
+- [x] **Commit 5:** Document the new API endpoints.
 
 ### Day 4: Introduction to Celery & Redis
 - [ ] **Daytime Learning:** Message brokers, background jobs, and how Celery uses Redis.
