@@ -55,13 +55,13 @@
 - [x] **Commit 5:** Test the task manually from the Django shell and fix bugs.
 
 ### Day 6: Scheduling with Celery Beat
-- [ ] **Daytime Learning:** Cron jobs, task scheduling, and `celery-beat`.
-- [ ] **Nighttime Doc:** Write down key concepts learned today.
-- [ ] **Commit 1:** Configure Celery Beat in Django project.
-- [ ] **Commit 2:** Write scheduler task to query all active `Monitor`s.
-- [ ] **Commit 3:** Dispatch individual ping tasks for each active monitor.
-- [ ] **Commit 4:** Test the periodic execution.
-- [ ] **Commit 5:** Document how to run Celery Beat in README.
+- [x] **Daytime Learning:** Cron jobs, task scheduling, and `celery-beat`.
+- [x] **Nighttime Doc:** Write down key concepts learned today.
+- [x] **Commit 1:** Configure Celery Beat in Django project.
+- [x] **Commit 2:** Write scheduler task to query all active `Monitor`s.
+- [x] **Commit 3:** Dispatch individual ping tasks for each active monitor.
+- [x] **Commit 4:** Test the periodic execution.
+- [x] **Commit 5:** Document how to run Celery Beat in README.
 
 ### Day 7: Backend Polish & Uptime Logic
 - [ ] **Daytime Learning:** Django aggregation/annotation (Count, Avg), calculating uptime percentage.

@@ -47,6 +47,12 @@ uv run celery -A config worker -l info -P solo
 uv run celery -A config worker -l info
 ```
 
+### Start Celery Beat Scheduler
+In a separate terminal:
+```powershell
+uv run celery -A config beat -l info
+```
+
 ---
 
 ## 4. Running Automated Tests
