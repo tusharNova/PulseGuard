@@ -5,7 +5,7 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 from .models import CheckResult, Monitor
-from .tasks import ping_monitor_task
+from .tasks import dispatch_active_monitors_task, ping_monitor_task
 
 User = get_user_model()
 
@@ -199,4 +199,32 @@ class PingerTaskTests(APITestCase):
         result = ping_monitor_task(str(self.monitor.id))
         self.assertEqual(result["status"], "skipped")
         self.assertEqual(self.monitor.check_results.count(), 0)
+
+
+class DispatcherTaskTests(APITestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(
+            email="dispatcher@pulseguard.io",
+            password="DispatchPassword123!",
+        )
+
+    @mock.patch("monitoring.tasks.ping_monitor_task.delay")
+    def test_dispatch_fans_out_to_active_monitors(self, mock_delay):
+        Monitor.objects.create(user=self.user, name="Active A", url="https://a.io", is_active=True)
+        Monitor.objects.create(user=self.user, name="Active B", url="https://b.io", is_active=True)
+        Monitor.objects.create(user=self.user, name="Inactive C", url="https://c.io", is_active=False)
+
+        result = dispatch_active_monitors_task()
+
+        self.assertEqual(result["dispatched"], 2)
+        self.assertEqual(mock_delay.call_count, 2)
+
+    @mock.patch("monitoring.tasks.ping_monitor_task.delay")
+    def test_dispatch_with_no_active_monitors(self, mock_delay):
+        Monitor.objects.create(user=self.user, name="Paused", url="https://paused.io", is_active=False)
+
+        result = dispatch_active_monitors_task()
+
+        self.assertEqual(result["dispatched"], 0)
+        mock_delay.assert_not_called()
 
