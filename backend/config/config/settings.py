@@ -145,3 +145,11 @@ CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_SERIALIZER = "json"
 CELERY_TIMEZONE = TIME_ZONE
 CELERY_TASK_TRACK_STARTED = True
+
+# Celery Beat: Periodic task schedule
+CELERY_BEAT_SCHEDULE = {
+    "dispatch-active-monitors-every-60s": {
+        "task": "monitoring.tasks.dispatch_active_monitors_task",
+        "schedule": 60.0,  # Run every 60 seconds
+    },
+}
