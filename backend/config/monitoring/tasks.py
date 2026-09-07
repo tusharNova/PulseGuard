@@ -74,3 +74,19 @@ def ping_monitor_task(self, monitor_id):
         "is_up": is_up,
         "error_message": error_message,
     }
+
+
+@shared_task
+def dispatch_active_monitors_task():
+    """
+    Celery Beat periodic task: queries all active monitors and fans out
+    individual ping_monitor_task jobs to the worker pool.
+    Designed to run on a fixed schedule (e.g., every 60 seconds).
+    """
+    monitor_ids = list(
+        Monitor.objects.filter(is_active=True).values_list("id", flat=True)
+    )
+    for monitor_id in monitor_ids:
+        ping_monitor_task.delay(str(monitor_id))
+
+    return {"dispatched": len(monitor_ids)}
