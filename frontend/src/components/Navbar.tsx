@@ -1,13 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Activity, LogIn, LayoutDashboard, ShieldCheck } from "lucide-react";
+import { Activity, LogIn, LayoutDashboard, ShieldCheck, User as UserIcon } from "lucide-react";
+import { useAuth } from "../context/AuthContext";
 
-interface NavbarProps {
-  isAuthenticated?: boolean;
-  onLogout?: () => void;
-}
+export const Navbar: React.FC = () => {
+  const { user, isAuthenticated, logout } = useAuth();
 
-export const Navbar: React.FC<NavbarProps> = ({ isAuthenticated = false, onLogout }) => {
   return (
     <header className="border-b border-slate-800 bg-slate-900/60 backdrop-blur-md sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
@@ -28,9 +26,13 @@ export const Navbar: React.FC<NavbarProps> = ({ isAuthenticated = false, onLogou
                 <LayoutDashboard className="h-4 w-4 text-emerald-400" />
                 <span>Dashboard</span>
               </Link>
+              <div className="flex items-center space-x-2 text-xs text-slate-400 border-l border-slate-800 pl-4 py-1">
+                <UserIcon className="h-3.5 w-3.5 text-slate-500" />
+                <span className="hidden sm:inline font-mono">{user?.email}</span>
+              </div>
               <button
-                onClick={onLogout}
-                className="px-3.5 py-1.5 rounded-lg text-sm bg-slate-800 hover:bg-slate-700 text-slate-200 transition border border-slate-700"
+                onClick={logout}
+                className="px-3.5 py-1.5 rounded-lg text-sm bg-slate-800 hover:bg-slate-700 text-slate-200 transition border border-slate-700 cursor-pointer"
               >
                 Logout
               </button>
