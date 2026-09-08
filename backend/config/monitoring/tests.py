@@ -1,7 +1,9 @@
+import datetime
 from unittest import mock
 import requests
 from django.contrib.auth import get_user_model
 from django.urls import reverse
+from django.utils import timezone
 from rest_framework import status
 from rest_framework.test import APITestCase
 from .models import CheckResult, Monitor
@@ -136,6 +138,44 @@ class MonitorAPITests(APITestCase):
         self.client.force_authenticate(user=self.user2)
         response = self.client.get(history_url)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_monitor_uptime_stats_calculation(self):
+        monitor = Monitor.objects.create(
+            user=self.user1,
+            name="Stats Server",
+            url="https://stats.io",
+        )
+        now = timezone.now()
+        # 3 checks: 2 UP, 1 DOWN -> 66.67% uptime, avg response time = (100+200)/2 = 150.0
+        CheckResult.objects.create(monitor=monitor, status_code=200, response_time_ms=100.0, is_up=True, timestamp=now - datetime.timedelta(hours=1))
+        CheckResult.objects.create(monitor=monitor, status_code=200, response_time_ms=200.0, is_up=True, timestamp=now - datetime.timedelta(hours=2))
+        CheckResult.objects.create(monitor=monitor, status_code=500, response_time_ms=500.0, is_up=False, timestamp=now - datetime.timedelta(hours=3))
+
+        stats_url = reverse("monitoring:monitor-uptime-stats", kwargs={"pk": monitor.id})
+        self.client.force_authenticate(user=self.user1)
+        response = self.client.get(stats_url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["total_checks"], 3)
+        self.assertEqual(response.data["successful_checks"], 2)
+        self.assertEqual(response.data["failed_checks"], 1)
+        self.assertEqual(response.data["uptime_percentage"], 66.67)
+        self.assertEqual(response.data["avg_response_time_ms"], 150.0)
+
+    def test_monitor_uptime_stats_empty(self):
+        monitor = Monitor.objects.create(
+            user=self.user1,
+            name="Fresh Server",
+            url="https://fresh.io",
+        )
+        stats_url = reverse("monitoring:monitor-uptime-stats", kwargs={"pk": monitor.id})
+        self.client.force_authenticate(user=self.user1)
+        response = self.client.get(stats_url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["total_checks"], 0)
+        self.assertEqual(response.data["uptime_percentage"], 100.0)
+        self.assertIsNone(response.data["avg_response_time_ms"])
 
 
 class PingerTaskTests(APITestCase):
