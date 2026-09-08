@@ -55,7 +55,8 @@ class MonitorAPITests(APITestCase):
         self.client.force_authenticate(user=self.user2)
         response = self.client.get(self.monitors_url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 0)
+        self.assertEqual(response.data["count"], 0)
+        self.assertEqual(len(response.data["results"]), 0)
 
     def test_tenant_isolation_cannot_access_other_users_monitor(self):
         # Alice creates a monitor
@@ -176,6 +177,44 @@ class MonitorAPITests(APITestCase):
         self.assertEqual(response.data["total_checks"], 0)
         self.assertEqual(response.data["uptime_percentage"], 100.0)
         self.assertIsNone(response.data["avg_response_time_ms"])
+
+    def test_paginated_check_results_list(self):
+        monitor = Monitor.objects.create(
+            user=self.user1,
+            name="Pagination Target",
+            url="https://page.io",
+        )
+        for i in range(25):
+            CheckResult.objects.create(
+                monitor=monitor,
+                status_code=200,
+                response_time_ms=50.0 + i,
+                is_up=True,
+            )
+
+        checks_url = reverse("monitoring:check-result-list")
+        self.client.force_authenticate(user=self.user1)
+        response = self.client.get(checks_url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["count"], 25)
+        self.assertEqual(len(response.data["results"]), 20)  # PAGE_SIZE is 20
+        self.assertIsNotNone(response.data["next"])
+
+    def test_filter_check_results_by_monitor(self):
+        monitor1 = Monitor.objects.create(user=self.user1, name="M1", url="https://m1.io")
+        monitor2 = Monitor.objects.create(user=self.user1, name="M2", url="https://m2.io")
+
+        CheckResult.objects.create(monitor=monitor1, status_code=200, is_up=True)
+        CheckResult.objects.create(monitor=monitor2, status_code=200, is_up=True)
+
+        checks_url = reverse("monitoring:check-result-list") + f"?monitor={monitor1.id}"
+        self.client.force_authenticate(user=self.user1)
+        response = self.client.get(checks_url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["count"], 1)
+        self.assertEqual(response.data["results"][0]["monitor"], monitor1.id)
 
 
 class PingerTaskTests(APITestCase):

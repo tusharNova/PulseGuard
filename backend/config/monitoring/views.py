@@ -4,7 +4,7 @@ from django.utils import timezone
 from rest_framework import permissions, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from .models import Monitor
+from .models import CheckResult, Monitor
 from .serializers import CheckResultSerializer, MonitorSerializer
 
 
@@ -66,3 +66,18 @@ class MonitorViewSet(viewsets.ModelViewSet):
             "uptime_percentage": uptime_percentage,
             "avg_response_time_ms": avg_response_time_ms,
         })
+
+
+class CheckResultViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    Paginated read-only viewset for CheckResults, scoped to authenticated user's monitors.
+    """
+    serializer_class = CheckResultSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        queryset = CheckResult.objects.filter(monitor__user=self.request.user)
+        monitor_id = self.request.query_params.get("monitor")
+        if monitor_id:
+            queryset = queryset.filter(monitor_id=monitor_id)
+        return queryset
