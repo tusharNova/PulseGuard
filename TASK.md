@@ -86,13 +86,13 @@
 - [x] **Commit 5:** Create empty Login page.
 
 ### Day 9: Frontend Authentication
-- [ ] **Daytime Learning:** Global state in React (Context API), storing JWT securely.
-- [ ] **Nighttime Doc:** Write down key concepts learned today.
-- [ ] **Commit 1:** Create an AuthContext to manage logged-in state.
-- [ ] **Commit 2:** Build the Login UI component.
-- [ ] **Commit 3:** Wire Login UI to Django JWT endpoint.
-- [ ] **Commit 4:** Add Axios interceptor to attach JWT to headers.
-- [ ] **Commit 5:** Implement Protected Routes in React Router.
+- [x] **Daytime Learning:** Global state in React (Context API), storing JWT securely.
+- [x] **Nighttime Doc:** Write down key concepts learned today.
+- [x] **Commit 1:** Create an AuthContext to manage logged-in state.
+- [x] **Commit 2:** Build the Login UI component.
+- [x] **Commit 3:** Wire Login UI to Django JWT endpoint.
+- [x] **Commit 4:** Add Axios interceptor to attach JWT to headers.
+- [x] **Commit 5:** Implement Protected Routes in React Router.
 
 ### Day 10: The Dashboard & API Integration
 - [ ] **Daytime Learning:** Fetching data in React, handling loading states and errors.
