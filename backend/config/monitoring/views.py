@@ -56,22 +56,25 @@ class MonitorViewSet(viewsets.ModelViewSet):
         uptime_percentage = round((successful / total) * 100, 2) if total > 0 else 100.0
         avg_response_time_ms = round(avg_rt, 2) if avg_rt is not None else None
 
-        return Response({
-            "monitor_id": str(monitor.id),
-            "monitor_name": monitor.name,
-            "period": "24h",
-            "total_checks": total,
-            "successful_checks": successful,
-            "failed_checks": total - successful,
-            "uptime_percentage": uptime_percentage,
-            "avg_response_time_ms": avg_response_time_ms,
-        })
+        return Response(
+            {
+                "monitor_id": str(monitor.id),
+                "monitor_name": monitor.name,
+                "period": "24h",
+                "total_checks": total,
+                "successful_checks": successful,
+                "failed_checks": total - successful,
+                "uptime_percentage": uptime_percentage,
+                "avg_response_time_ms": avg_response_time_ms,
+            }
+        )
 
 
 class CheckResultViewSet(viewsets.ReadOnlyModelViewSet):
     """
     Paginated read-only viewset for CheckResults, scoped to authenticated user's monitors.
     """
+
     serializer_class = CheckResultSerializer
     permission_classes = [permissions.IsAuthenticated]
 

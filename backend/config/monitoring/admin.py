@@ -4,7 +4,15 @@ from .models import CheckResult, Monitor
 
 @admin.register(Monitor)
 class MonitorAdmin(admin.ModelAdmin):
-    list_display = ("name", "url", "user", "monitor_type", "interval", "is_active", "created_at")
+    list_display = (
+        "name",
+        "url",
+        "user",
+        "monitor_type",
+        "interval",
+        "is_active",
+        "created_at",
+    )
     search_fields = ("name", "url", "user__email")
     list_filter = ("monitor_type", "is_active", "created_at")
     ordering = ("-created_at",)

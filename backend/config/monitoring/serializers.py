@@ -19,7 +19,9 @@ class MonitorSerializer(serializers.ModelSerializer):
 
     def validate_interval(self, value):
         if value < 10:
-            raise serializers.ValidationError("Monitoring interval must be at least 10 seconds.")
+            raise serializers.ValidationError(
+                "Monitoring interval must be at least 10 seconds."
+            )
         return value
 
 

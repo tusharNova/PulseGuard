@@ -34,7 +34,9 @@ class MonitorAPITests(APITestCase):
 
     def test_create_monitor_authenticated(self):
         self.client.force_authenticate(user=self.user1)
-        response = self.client.post(self.monitors_url, self.monitor_payload, format="json")
+        response = self.client.post(
+            self.monitors_url, self.monitor_payload, format="json"
+        )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data["name"], self.monitor_payload["name"])
 
@@ -43,7 +45,9 @@ class MonitorAPITests(APITestCase):
         self.assertEqual(monitor.user, self.user1)
 
     def test_create_monitor_unauthenticated(self):
-        response = self.client.post(self.monitors_url, self.monitor_payload, format="json")
+        response = self.client.post(
+            self.monitors_url, self.monitor_payload, format="json"
+        )
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_list_monitors_scoped_to_user(self):
@@ -114,9 +118,27 @@ class MonitorAPITests(APITestCase):
 
         now = timezone.now()
         # Create 3 check results with distinct timestamps
-        CheckResult.objects.create(monitor=monitor, status_code=200, response_time_ms=120.0, is_up=True, timestamp=now - datetime.timedelta(minutes=2))
-        CheckResult.objects.create(monitor=monitor, status_code=500, response_time_ms=250.0, is_up=False, timestamp=now - datetime.timedelta(minutes=1))
-        CheckResult.objects.create(monitor=monitor, status_code=200, response_time_ms=110.0, is_up=True, timestamp=now)
+        CheckResult.objects.create(
+            monitor=monitor,
+            status_code=200,
+            response_time_ms=120.0,
+            is_up=True,
+            timestamp=now - datetime.timedelta(minutes=2),
+        )
+        CheckResult.objects.create(
+            monitor=monitor,
+            status_code=500,
+            response_time_ms=250.0,
+            is_up=False,
+            timestamp=now - datetime.timedelta(minutes=1),
+        )
+        CheckResult.objects.create(
+            monitor=monitor,
+            status_code=200,
+            response_time_ms=110.0,
+            is_up=True,
+            timestamp=now,
+        )
 
         history_url = reverse("monitoring:monitor-history", kwargs={"pk": monitor.id})
 
@@ -132,7 +154,9 @@ class MonitorAPITests(APITestCase):
             name="Alice Server",
             url="https://alice.io",
         )
-        CheckResult.objects.create(monitor=monitor, status_code=200, response_time_ms=50.0, is_up=True)
+        CheckResult.objects.create(
+            monitor=monitor, status_code=200, response_time_ms=50.0, is_up=True
+        )
         history_url = reverse("monitoring:monitor-history", kwargs={"pk": monitor.id})
 
         # Bob attempts to read Alice's monitor check history -> must return 404
@@ -148,11 +172,31 @@ class MonitorAPITests(APITestCase):
         )
         now = timezone.now()
         # 3 checks: 2 UP, 1 DOWN -> 66.67% uptime, avg response time = (100+200)/2 = 150.0
-        CheckResult.objects.create(monitor=monitor, status_code=200, response_time_ms=100.0, is_up=True, timestamp=now - datetime.timedelta(hours=1))
-        CheckResult.objects.create(monitor=monitor, status_code=200, response_time_ms=200.0, is_up=True, timestamp=now - datetime.timedelta(hours=2))
-        CheckResult.objects.create(monitor=monitor, status_code=500, response_time_ms=500.0, is_up=False, timestamp=now - datetime.timedelta(hours=3))
+        CheckResult.objects.create(
+            monitor=monitor,
+            status_code=200,
+            response_time_ms=100.0,
+            is_up=True,
+            timestamp=now - datetime.timedelta(hours=1),
+        )
+        CheckResult.objects.create(
+            monitor=monitor,
+            status_code=200,
+            response_time_ms=200.0,
+            is_up=True,
+            timestamp=now - datetime.timedelta(hours=2),
+        )
+        CheckResult.objects.create(
+            monitor=monitor,
+            status_code=500,
+            response_time_ms=500.0,
+            is_up=False,
+            timestamp=now - datetime.timedelta(hours=3),
+        )
 
-        stats_url = reverse("monitoring:monitor-uptime-stats", kwargs={"pk": monitor.id})
+        stats_url = reverse(
+            "monitoring:monitor-uptime-stats", kwargs={"pk": monitor.id}
+        )
         self.client.force_authenticate(user=self.user1)
         response = self.client.get(stats_url)
 
@@ -169,7 +213,9 @@ class MonitorAPITests(APITestCase):
             name="Fresh Server",
             url="https://fresh.io",
         )
-        stats_url = reverse("monitoring:monitor-uptime-stats", kwargs={"pk": monitor.id})
+        stats_url = reverse(
+            "monitoring:monitor-uptime-stats", kwargs={"pk": monitor.id}
+        )
         self.client.force_authenticate(user=self.user1)
         response = self.client.get(stats_url)
 
@@ -202,8 +248,12 @@ class MonitorAPITests(APITestCase):
         self.assertIsNotNone(response.data["next"])
 
     def test_filter_check_results_by_monitor(self):
-        monitor1 = Monitor.objects.create(user=self.user1, name="M1", url="https://m1.io")
-        monitor2 = Monitor.objects.create(user=self.user1, name="M2", url="https://m2.io")
+        monitor1 = Monitor.objects.create(
+            user=self.user1, name="M1", url="https://m1.io"
+        )
+        monitor2 = Monitor.objects.create(
+            user=self.user1, name="M2", url="https://m2.io"
+        )
 
         CheckResult.objects.create(monitor=monitor1, status_code=200, is_up=True)
         CheckResult.objects.create(monitor=monitor2, status_code=200, is_up=True)
@@ -264,7 +314,9 @@ class PingerTaskTests(APITestCase):
         self.assertIsNone(result["status_code"])
         self.assertIn("timed out", result["error_message"].lower())
 
-    @mock.patch("requests.get", side_effect=requests.exceptions.ConnectionError("DNS failure"))
+    @mock.patch(
+        "requests.get", side_effect=requests.exceptions.ConnectionError("DNS failure")
+    )
     def test_ping_connection_error(self, mock_get):
         result = ping_monitor_task(str(self.monitor.id))
         self.assertFalse(result["is_up"])
@@ -289,9 +341,15 @@ class DispatcherTaskTests(APITestCase):
 
     @mock.patch("monitoring.tasks.ping_monitor_task.delay")
     def test_dispatch_fans_out_to_active_monitors(self, mock_delay):
-        Monitor.objects.create(user=self.user, name="Active A", url="https://a.io", is_active=True)
-        Monitor.objects.create(user=self.user, name="Active B", url="https://b.io", is_active=True)
-        Monitor.objects.create(user=self.user, name="Inactive C", url="https://c.io", is_active=False)
+        Monitor.objects.create(
+            user=self.user, name="Active A", url="https://a.io", is_active=True
+        )
+        Monitor.objects.create(
+            user=self.user, name="Active B", url="https://b.io", is_active=True
+        )
+        Monitor.objects.create(
+            user=self.user, name="Inactive C", url="https://c.io", is_active=False
+        )
 
         result = dispatch_active_monitors_task()
 
@@ -300,10 +358,11 @@ class DispatcherTaskTests(APITestCase):
 
     @mock.patch("monitoring.tasks.ping_monitor_task.delay")
     def test_dispatch_with_no_active_monitors(self, mock_delay):
-        Monitor.objects.create(user=self.user, name="Paused", url="https://paused.io", is_active=False)
+        Monitor.objects.create(
+            user=self.user, name="Paused", url="https://paused.io", is_active=False
+        )
 
         result = dispatch_active_monitors_task()
 
         self.assertEqual(result["dispatched"], 0)
         mock_delay.assert_not_called()
-
