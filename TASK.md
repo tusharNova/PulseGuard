@@ -77,13 +77,13 @@
 ## Phase 2: Frontend Foundation (Days 8-14)
 
 ### Day 8: React + TypeScript Scaffold
-- [ ] **Daytime Learning:** TypeScript basics, React component lifecycle, Hooks.
-- [ ] **Nighttime Doc:** Write down key concepts learned today.
-- [ ] **Commit 1:** Set up React app using Vite (`npm create vite@latest`).
-- [ ] **Commit 2:** Clean up boilerplate and set up folder structure.
-- [ ] **Commit 3:** Set up React Router for navigation.
-- [ ] **Commit 4:** Create empty Dashboard page.
-- [ ] **Commit 5:** Create empty Login page.
+- [x] **Daytime Learning:** TypeScript basics, React component lifecycle, Hooks.
+- [x] **Nighttime Doc:** Write down key concepts learned today.
+- [x] **Commit 1:** Set up React app using Vite (`npm create vite@latest`).
+- [x] **Commit 2:** Clean up boilerplate and set up folder structure.
+- [x] **Commit 3:** Set up React Router for navigation.
+- [x] **Commit 4:** Create empty Dashboard page.
+- [x] **Commit 5:** Create empty Login page.
 
 ### Day 9: Frontend Authentication
 - [ ] **Daytime Learning:** Global state in React (Context API), storing JWT securely.
