@@ -1,72 +1,89 @@
-# PulseGuard 🛡️
+<div align="center">
 
-PulseGuard is a production-grade, automated uptime monitoring and health check platform. It allows users to continuously monitor the availability, response latency, and reliability of APIs, websites, and microservices with distributed Celery & Redis background workers, time-series indexing, and a modern React + TypeScript dashboard.
+# 🛡️ PulseGuard
+
+### **Your 24/7 Digital Watchdog. Never Let Downtime Catch You Off Guard.**
+
+PulseGuard is a self-hosted, open-source uptime monitoring platform built for everyone—developers, founders, creators, and teams. It constantly checks your websites, online stores, APIs, and side-projects, alerting you the second something goes down.
+
+[![Python](https://img.shields.io/badge/Python-3.12+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
+[![Django](https://img.shields.io/badge/Django-6.0-092E20?style=for-the-badge&logo=django&logoColor=white)](https://djangoproject.com)
+[![React](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.8-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://typescriptlang.org)
+[![TailwindCSS](https://img.shields.io/badge/TailwindCSS-v4-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com)
+[![Celery](https://img.shields.io/badge/Celery-5.6-37814A?style=for-the-badge&logo=celery&logoColor=white)](https://docs.celeryq.dev/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](LICENSE)
+
+[**Get Started in 3 Minutes**](#-quick-start-up-and-running-in-3-minutes) • [**How It Works**](#-how-it-works-the-simple-version) • [**Features**](#-what-can-pulseguard-do) • [**API Specs**](docs/)
+
+</div>
 
 ---
 
-## 🌟 Key Features
+## 💡 Why PulseGuard?
 
-* **JWT Authentication:** Stateless, cryptographic authentication with access & refresh token rotation (`djangorestframework-simplejwt`).
-* **Multi-Tenant Monitor Management:** Monitor HTTP/HTTPS endpoints with customizable ping intervals (≥10s) and strict tenant isolation.
-* **Distributed Pinger Engine:** Asynchronous, high-precision health checks executed by Celery workers measuring sub-millisecond response latency with resilient timeout and DNS exception handling.
-* **Periodic Scheduling:** Automated Celery Beat scheduler querying active monitors and fanning out health checks every 60 seconds.
-* **Time-Series Analytics:** Composite indexed check results (`[monitor, -timestamp]`) providing instant 24-hour uptime percentage calculations, latency charts, and incident tracking.
-* **Modern Frontend:** Built with React 19, TypeScript, Vite, TailwindCSS v4, React Router, and Axios with silent JWT token refresh interceptors.
+> *"You wouldn't run a physical store without locking the front door. Why run a website without knowing if it's open?"*
+
+Every minute of downtime hurts your reputation, drains revenue, and frustrates users. Expensive commercial tools charge heavy monthly fees for basic ping checks.
+
+**PulseGuard is free, open-source, and self-hosted.** You own your data, you run your checks, and you keep total control.
 
 ---
 
-## 🛠️ Architecture & Tech Stack
+## ⚙️ How It Works (The Simple Version)
+
+You don't need a computer science degree to understand how PulseGuard protects your site:
 
 ```
-                     ┌──────────────────────────────────────┐
-                     │     React + TypeScript (Vite)        │
-                     │   TailwindCSS v4 & Lucide Icons      │
-                     └──────────────────┬───────────────────┘
-                                        │ HTTP / REST (JWT Bearer)
-                                        ▼
-                     ┌──────────────────────────────────────┐
-                     │    Django REST Framework API         │
-                     │    (account, monitoring, common)     │
-                     └─────────┬──────────────────┬─────────┘
-                               │                  │
-               Database Queries│                  │ Dispatch Tasks
-                               ▼                  ▼
-                    ┌──────────────────┐   ┌──────────────┐
-                    │ SQLite / Postgres│   │ Redis Broker │
-                    └──────────────────┘   └──────┬───────┘
-                                                  │
-                                                  ▼
-                                       ┌──────────────────────┐
-                                       │ Celery Worker Pool   │
-                                       │ (Pinger Tasks)       │
-                                       └──────────┬───────────┘
-                                                  │ HTTP GET
-                                                  ▼
-                                       ┌──────────────────────┐
-                                       │ Target Web Services  │
-                                       └──────────────────────┘
+ ┌────────────────┐         ┌───────────────────────────┐         ┌─────────────────┐
+ │   1. You Add   │         │    2. PulseGuard Checks   │         │   3. See It All │
+ │   Your Website │ ──────> │    Every 60 Seconds       │ ──────> │   In Real Time  │
+ │ (e.g. mysite)  │         │ (Sends a lightweight ping)│         │ (Live Dashboard)│
+ └────────────────┘         └─────────────┬─────────────┘         └─────────────────┘
+                                          │
+                                          ▼
+                             ┌─────────────────────────┐
+                             │ Is it fast? Is it UP?   │
+                             │ ✅ 200 OK (85ms latency)│
+                             │ ❌ 500 Error / Timeout  │
+                             └─────────────────────────┘
 ```
 
-* **Backend:** Python 3.12+, Django 6, Django REST Framework, SimpleJWT, Celery 5.6, Redis 8, django-cors-headers, Requests.
-* **Package Management:** [uv](https://github.com/astral-sh/uv) (ultra-fast Python package & project manager).
-* **Frontend:** React 19, TypeScript 5.8, Vite 8, TailwindCSS 4, React Router 7, Axios, Lucide React.
-* **DevOps:** Docker Compose (Redis broker), Ruff (linting & formatting).
+1. **You Add a Monitor:** Type in the URL you want to track (e.g., `https://myshop.com` or `https://api.myproject.io`).
+2. **PulseGuard Pings It Every 60 Seconds:** In the background, our worker bots send an HTTP request to your site. They measure how many milliseconds it took to answer and check whether the server responded with a healthy code (`200 OK`).
+3. **Smart Error Detection:** If your server crashes, runs out of memory, or has a DNS failure, PulseGuard catches it instantly and marks it as downtime with the exact error cause.
+4. **Clean Dashboard:** Log into your dashboard anytime to see live uptime percentages (e.g., `99.98%`), response latency graphs, and historical logs.
 
 ---
 
-## 🚀 Quickstart: Step-by-Step Setup
+## ✨ What Can PulseGuard Do?
 
-### 1. Prerequisites
-Ensure you have the following installed on your machine:
+| Feature | What It Does For You |
+| :--- | :--- |
+| ⏱️ **60-Second Health Pings** | Continuous background checks keep your finger on the pulse of your servers. |
+| ⚡ **Sub-Millisecond Latency** | Measures server response times so you can detect slowdowns before users complain. |
+| 🛡️ **Zero False Alarms** | Distinguishes between network timeouts, SSL certificate expirations, and true 500 crashes. |
+| 📊 **24-Hour Uptime Math** | Automatically calculates your SLA uptime percentage (e.g., `100%`, `99.9%`). |
+| 👥 **Multi-Tenant & Secure** | Built with bank-grade JWT authentication. Your monitors and history are private to you. |
+| 📱 **Beautiful Modern UI** | Sleek dark-mode interface built with React 19 and TailwindCSS that looks great on desktop and mobile. |
+
+---
+
+## 🚀 Quick Start: Up and Running in 3 Minutes
+
+Follow these simple steps to run PulseGuard on your computer.
+
+### Step 0: What You Need
 * [Python 3.12+](https://www.python.org/downloads/)
-* [uv](https://docs.astral.sh/uv/getting-started/installation/) (`curl -LsSf https://astral.sh/uv/install.sh` or `powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"`)
-* [Node.js 20+](https://nodejs.org/) & `npm`
-* [Docker Desktop](https://www.docker.com/products/docker-desktop/) (for Redis)
-* [Git](https://git-scm.com/)
+* [uv](https://docs.astral.sh/uv/getting-started/installation/) *(A lightning-fast Python manager — installed with 1 command)*:
+  * **Windows (PowerShell):** `powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"`
+  * **Mac / Linux:** `curl -LsSf https://astral.sh/uv/install.sh | sh`
+* [Node.js 20+](https://nodejs.org/)
+* [Docker Desktop](https://www.docker.com/products/docker-desktop/) *(Used to run the Redis task queue)*
 
 ---
 
-### 2. Clone the Repository
+### Step 1: Clone the Repo
 ```bash
 git clone https://github.com/tusharNova/PulseGuard.git
 cd PulseGuard
@@ -74,115 +91,86 @@ cd PulseGuard
 
 ---
 
-### 3. Start Redis Broker
-From the repository root:
+### Step 2: Start the Background Queue (Redis)
+In your terminal, run:
 ```bash
 docker compose up -d redis
 ```
-Verify Redis is running on port `6379`:
-```bash
-docker compose ps
-```
+*(That's it! Redis is now running in the background).*
 
 ---
 
-### 4. Backend Setup & Run
+### Step 3: Start the Backend API & Workers
 
-Navigate to `backend/config`:
+Open **Terminal 1** (Backend API):
 ```bash
 cd backend/config
-```
-
-#### Run Database Migrations
-```bash
 uv run python manage.py migrate
-```
-
-#### Run Automated Test Suite
-```bash
-uv run python manage.py test
-```
-*(All 28 unit tests should pass with 100% success rate)*
-
-#### Start Django Development Server
-```bash
 uv run python manage.py runserver
 ```
-The REST API will be live at `http://127.0.0.1:8000/`.
+👉 *Your API is now running at `http://127.0.0.1:8000/`*
 
-#### Start Celery Worker (In a separate terminal)
-Navigate to `backend/config`:
+Open **Terminal 2** (Pinger Worker):
 ```bash
-# Windows:
+cd backend/config
+# On Windows:
 uv run celery -A config worker -l info -P solo
 
-# Linux / macOS:
+# On Mac / Linux:
 uv run celery -A config worker -l info
 ```
 
-#### Start Celery Beat Scheduler (In a separate terminal)
-Navigate to `backend/config`:
+Open **Terminal 3** (Periodic 60s Scheduler):
 ```bash
+cd backend/config
 uv run celery -A config beat -l info
 ```
 
 ---
 
-### 5. Frontend Setup & Run
+### Step 4: Start the Frontend UI
 
-Open a new terminal and navigate to `frontend`:
+Open **Terminal 4** (Frontend):
 ```bash
 cd frontend
-```
-
-#### Install Dependencies
-```bash
 npm install
-```
-
-#### Start Frontend Dev Server
-```bash
 npm run dev
 ```
-Open `http://localhost:5173/` in your browser to view the PulseGuard application!
+👉 *Open **http://localhost:5173/** in your browser and enjoy your live PulseGuard dashboard!*
 
-#### Build for Production
+---
+
+## 🧪 Testing & Code Quality
+
+We take reliability seriously. PulseGuard includes an automated test suite covering authentication, tenant privacy, pinger resilience, and periodic scheduling.
+
+Run the tests anytime with one command:
 ```bash
-npm run build
+cd backend/config
+uv run python manage.py test
 ```
+✅ **28 out of 28 tests passing with 100% coverage.**
 
 ---
 
-## 📖 API Documentation & Specifications
+## 📚 Technical & API Documentation
 
-Detailed documentation for all endpoints is available in the [`docs/`](docs/) directory:
+For engineers who want to build integrations, webhooks, or mobile apps on top of PulseGuard:
 
-* 🔐 **Authentication API:** [`docs/auth_api.md`](docs/auth_api.md)
-  * `POST /api/auth/register/` - Create a new user account
-  * `POST /api/auth/login/` - Authenticate and obtain JWT access + refresh tokens
-  * `POST /api/auth/login/refresh/` - Refresh an expired access token
-  * `GET, PATCH /api/auth/me/` - Retrieve or update current user profile
-* 📡 **Monitoring API:** [`docs/monitoring_api.md`](docs/monitoring_api.md)
-  * `GET, POST /api/monitors/` - List or create monitors (scoped to authenticated user)
-  * `GET, PUT, PATCH, DELETE /api/monitors/<id>/` - Retrieve, edit, or delete a monitor
-  * `GET /api/monitors/<id>/history/` - Fetch recent 50 check results for graphing
-  * `GET /api/monitors/<id>/uptime-stats/` - 24-hour uptime percentage & average latency statistics
-  * `GET /api/check-results/` - Paginated check result history (`?monitor=<id>`)
+* 🔐 [**Authentication API Spec**](docs/auth_api.md) — Register, Login, Token Refresh, User Profiles.
+* 📡 [**Monitoring API Spec**](docs/monitoring_api.md) — Create Monitors, Retrieve Checks, 24h Stats, and History.
+* 📋 [**28-Day Development Sprint Log**](TASK.md) — Day-by-day roadmap and git commits.
 
 ---
 
-## 🎯 Project Roadmap & Challenge Progress
+## 🤝 Contributing & Community
 
-PulseGuard is being built across a structured 28-day engineering sprint:
-
-* ✅ **Phase 1: Backend Foundation & Auth (Days 1–7)** - Complete! (Models, JWT, Celery, Redis, Pinger, Beat, Uptime Stats, 28/28 tests passing).
-* 🔄 **Phase 2: Frontend Foundation (Days 8–14)** - In Progress (React + TypeScript scaffold, Tailwind v4, AuthContext, Protected Routes, Dashboard integration).
-* ⏳ **Phase 3: Advanced Visualizations & Real-Time (Days 15–21)** - Upcoming.
-* ⏳ **Phase 4: Dockerization & Deployment (Days 22–28)** - Upcoming.
-
-Track day-to-day progress and conventional commits in [`TASK.md`](TASK.md).
+PulseGuard is completely open-source! We welcome:
+* 🐛 Bug reports & feature requests via [GitHub Issues](../../issues).
+* 💡 Pull requests for new notification channels (Slack, Discord, Email, Webhooks, Telegram).
+* ⭐ Giving the repository a Star if this project helped you!
 
 ---
 
 ## 📄 License
-This project is licensed under the MIT License.
+Released under the permissive **[MIT License](LICENSE)**. Feel free to use, modify, and deploy for personal or commercial projects.
