@@ -76,3 +76,49 @@ All endpoints require JWT Bearer Authentication (`Authorization: Bearer <access_
     }
   ]
   ```
+
+---
+
+### 5. 24-Hour Uptime & Latency Statistics
+* **URL:** `/api/monitors/<id>/uptime-stats/`
+* **Method:** `GET`
+* **Access:** Authenticated (Owner only)
+* **Success Response (200 OK):**
+  ```json
+  {
+    "monitor_id": "7b09be18-b0a6-42bb-a7ad-cf2b08331d25",
+    "monitor_name": "Production API",
+    "period": "24h",
+    "total_checks": 1440,
+    "successful_checks": 1438,
+    "failed_checks": 2,
+    "uptime_percentage": 99.86,
+    "avg_response_time_ms": 112.4
+  }
+  ```
+
+---
+
+### 6. List All Check Results (Paginated)
+* **URL:** `/api/check-results/` (Optional query filter: `?monitor=<monitor_id>`)
+* **Method:** `GET`
+* **Access:** Authenticated (Scoped to current user's monitors)
+* **Success Response (200 OK):**
+  ```json
+  {
+    "count": 1440,
+    "next": "http://127.0.0.1:8000/api/check-results/?page=2",
+    "previous": null,
+    "results": [
+      {
+        "id": "e4c9f131-92be-497b-83c9-d2b5ff88258b",
+        "monitor": "7b09be18-b0a6-42bb-a7ad-cf2b08331d25",
+        "timestamp": "2026-09-08T12:05:00Z",
+        "status_code": 200,
+        "response_time_ms": 124.5,
+        "is_up": true,
+        "error_message": ""
+      }
+    ]
+  }
+  ```

@@ -60,3 +60,18 @@ Run the entire automated test suite:
 ```powershell
 uv run python manage.py test
 ```
+
+---
+
+## 5. API Overview
+* **Authentication:** [`docs/auth_api.md`](../docs/auth_api.md)
+  * `POST /api/auth/register/` - Create account
+  * `POST /api/auth/login/` - JWT Login (access + refresh)
+  * `POST /api/auth/login/refresh/` - Refresh access token
+  * `GET /api/auth/me/` - Current user profile
+* **Monitoring & Health Checks:** [`docs/monitoring_api.md`](../docs/monitoring_api.md)
+  * `GET, POST /api/monitors/` - List/Create monitors (scoped to authenticated user)
+  * `GET, PUT, PATCH, DELETE /api/monitors/<id>/` - Retrieve/Update/Delete monitor
+  * `GET /api/monitors/<id>/history/` - Recent 50 checks for charting
+  * `GET /api/monitors/<id>/uptime-stats/` - 24-hour uptime percentage & average latency
+  * `GET /api/check-results/` - Paginated check result history (`?monitor=<id>`)

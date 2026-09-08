@@ -64,13 +64,13 @@
 - [x] **Commit 5:** Document how to run Celery Beat in README.
 
 ### Day 7: Backend Polish & Uptime Logic
-- [ ] **Daytime Learning:** Django aggregation/annotation (Count, Avg), calculating uptime percentage.
-- [ ] **Nighttime Doc:** Write down key concepts learned today.
-- [ ] **Commit 1:** Write custom API endpoint to calculate 24-hour uptime percentage.
-- [ ] **Commit 2:** Add pagination to `CheckResult` API.
-- [ ] **Commit 3:** Refactor and clean up backend code.
-- [ ] **Commit 4:** Freeze Python requirements using `uv pip freeze`.
-- [ ] **Commit 5:** Weekly review and README updates.
+- [x] **Daytime Learning:** Django aggregation/annotation (Count, Avg), calculating uptime percentage.
+- [x] **Nighttime Doc:** Write down key concepts learned today.
+- [x] **Commit 1:** Write custom API endpoint to calculate 24-hour uptime percentage.
+- [x] **Commit 2:** Add pagination to `CheckResult` API.
+- [x] **Commit 3:** Refactor and clean up backend code.
+- [x] **Commit 4:** Freeze Python requirements using `uv pip freeze`.
+- [x] **Commit 5:** Weekly review and README updates.
 
 ---
 
