@@ -171,13 +171,13 @@
 - [x] **Commit 5:** Document the alerting flow in README.
 
 ### Day 18: User Profile & Settings
-- [ ] **Daytime Learning:** Handling PUT/PATCH requests.
-- [ ] **Nighttime Doc:** Write down key concepts learned today.
-- [ ] **Commit 1:** Build User Settings UI page.
-- [ ] **Commit 2:** Create Django API endpoint for user updates.
-- [ ] **Commit 3:** Connect frontend to update name/email.
-- [ ] **Commit 4:** Add alert preferences toggle.
-- [ ] **Commit 5:** Handle successful updates with toast notifications.
+- [x] **Daytime Learning:** Handling PUT/PATCH requests.
+- [x] **Nighttime Doc:** Write down key concepts learned today.
+- [x] **Commit 1:** Build User Settings UI page.
+- [x] **Commit 2:** Create Django API endpoint for user updates.
+- [x] **Commit 3:** Connect frontend to update name/email.
+- [x] **Commit 4:** Add alert preferences toggle.
+- [x] **Commit 5:** Handle successful updates with toast notifications.
 
 ### Day 19: Backend Unit Testing
 - [ ] **Daytime Learning:** Automated testing principles, Pytest vs Unittest, Mocking.
