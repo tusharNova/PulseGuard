@@ -144,13 +144,13 @@
 ## Phase 3: Advanced Features & Refinement (Days 15-21)
 
 ### Day 15: Advanced Charts & Status Bars
-- [ ] **Daytime Learning:** Component composition in React.
-- [ ] **Nighttime Doc:** Write down key concepts learned today.
-- [ ] **Commit 1:** Build a GitHub-style "Status Bar" component (green/red blocks).
-- [ ] **Commit 2:** Integrate Status Bar on the Dashboard.
-- [ ] **Commit 3:** Integrate Status Bar on Monitor Detail page.
-- [ ] **Commit 4:** Customize Recharts axes and colors to match theme.
-- [ ] **Commit 5:** Optimize chart rendering.
+- [x] **Daytime Learning:** Component composition in React.
+- [x] **Nighttime Doc:** Write down key concepts learned today.
+- [x] **Commit 1:** Build a GitHub-style "Status Bar" component (green/red blocks).
+- [x] **Commit 2:** Integrate Status Bar on the Dashboard.
+- [x] **Commit 3:** Integrate Status Bar on Monitor Detail page.
+- [x] **Commit 4:** Customize Recharts axes and colors to match theme.
+- [x] **Commit 5:** Optimize chart rendering.
 
 ### Day 16: Alerting Foundation (Backend)
 - [ ] **Daytime Learning:** Webhooks, how email systems work (SMTP).
