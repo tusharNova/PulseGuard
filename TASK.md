@@ -162,13 +162,13 @@
 - [x] **Commit 5:** Refactor Celery ping task for cleanliness.
 
 ### Day 17: Simulating Email Alerts
-- [ ] **Daytime Learning:** Using Django's console email backend.
-- [ ] **Nighttime Doc:** Write down key concepts learned today.
-- [ ] **Commit 1:** Configure Django console email backend.
-- [ ] **Commit 2:** Write email template and logic for "Site DOWN".
-- [ ] **Commit 3:** Write email template and logic for "Site UP".
-- [ ] **Commit 4:** Test alerts by intentionally breaking a URL.
-- [ ] **Commit 5:** Document the alerting flow in README.
+- [x] **Daytime Learning:** Using Django's console email backend.
+- [x] **Nighttime Doc:** Write down key concepts learned today.
+- [x] **Commit 1:** Configure Django console email backend.
+- [x] **Commit 2:** Write email template and logic for "Site DOWN".
+- [x] **Commit 3:** Write email template and logic for "Site UP".
+- [x] **Commit 4:** Test alerts by intentionally breaking a URL.
+- [x] **Commit 5:** Document the alerting flow in README.
 
 ### Day 18: User Profile & Settings
 - [ ] **Daytime Learning:** Handling PUT/PATCH requests.
