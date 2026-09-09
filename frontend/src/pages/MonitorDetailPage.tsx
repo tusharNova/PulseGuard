@@ -16,6 +16,7 @@ import {
   WifiOff,
   XCircle,
 } from "lucide-react";
+import toast from "react-hot-toast";
 import { monitorsApi } from "../api/monitors";
 import type { CheckResult, Monitor, UptimeStats } from "../types";
 
@@ -75,8 +76,11 @@ export const MonitorDetailPage: React.FC = () => {
         is_active: !monitor.is_active,
       });
       setMonitor(updated);
+      toast.success(
+        updated.is_active ? `Resumed monitoring "${monitor.name}"` : `Paused monitoring "${monitor.name}"`
+      );
     } catch {
-      alert("Failed to update status. Please try again.");
+      toast.error("Failed to update status. Please try again.");
     } finally {
       setIsToggling(false);
     }
@@ -95,9 +99,10 @@ export const MonitorDetailPage: React.FC = () => {
     setIsDeleting(true);
     try {
       await monitorsApi.deleteMonitor(monitor.id);
+      toast.success(`Deleted monitor "${monitor.name}"`);
       navigate("/dashboard");
     } catch {
-      alert("Failed to delete monitor. Please try again.");
+      toast.error("Failed to delete monitor. Please try again.");
       setIsDeleting(false);
     }
   };

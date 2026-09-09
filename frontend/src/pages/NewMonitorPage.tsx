@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ArrowLeft, PlusCircle } from "lucide-react";
+import toast from "react-hot-toast";
 import { monitorsApi } from "../api/monitors";
 import type { CreateMonitorPayload } from "../api/monitors";
 import { MonitorForm } from "../components/MonitorForm";
@@ -16,6 +17,7 @@ export const NewMonitorPage: React.FC = () => {
 
     try {
       await monitorsApi.createMonitor(payload);
+      toast.success(`Monitor "${payload.name}" created! Background checks initiated.`);
       navigate("/dashboard");
     } catch (err: any) {
       const detail =

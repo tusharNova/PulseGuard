@@ -16,6 +16,7 @@ import {
   Wifi,
   WifiOff,
 } from "lucide-react";
+import toast from "react-hot-toast";
 import { monitorsApi } from "../api/monitors";
 import type { Monitor } from "../types";
 
@@ -63,8 +64,11 @@ export const DashboardPage: React.FC = () => {
       setMonitors((prev) =>
         prev.map((m) => (m.id === monitor.id ? { ...m, is_active: updated.is_active } : m))
       );
+      toast.success(
+        updated.is_active ? `Resumed monitoring "${monitor.name}"` : `Paused monitoring "${monitor.name}"`
+      );
     } catch {
-      alert("Failed to update monitor status. Please try again.");
+      toast.error("Failed to update monitor status. Please try again.");
     } finally {
       setTogglingId(null);
     }
@@ -80,8 +84,9 @@ export const DashboardPage: React.FC = () => {
       await monitorsApi.deleteMonitor(id);
       setMonitors((prev) => prev.filter((m) => m.id !== id));
       setTotalCount((prev) => Math.max(0, prev - 1));
+      toast.success(`Deleted monitor "${name}"`);
     } catch {
-      alert("Failed to delete monitor. Please try again.");
+      toast.error("Failed to delete monitor. Please try again.");
     } finally {
       setDeletingId(null);
     }

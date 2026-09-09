@@ -1,77 +1,60 @@
-# React + TypeScript + Vite
+# PulseGuard Web Frontend 💻
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+The official web client for PulseGuard, built with React 19, TypeScript, Vite, and TailwindCSS v4.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
-
-## React Compiler
-
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
-
-Note: This will impact Vite dev & build performances.
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## 🏗️ Architecture & Directory Structure
 
 ```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+frontend/src/
+├── api/
+│   ├── client.ts         # Pre-configured Axios instance with JWT interceptors
+│   ├── auth.ts           # Authentication API calls (login, register, me)
+│   └── monitors.ts       # Monitoring API calls (CRUD, history, 24h stats)
+├── components/
+│   ├── Navbar.tsx        # Responsive header with live auth state and logout
+│   ├── ProtectedRoute.tsx# Route guard restricting unauthenticated access
+│   └── MonitorForm.tsx   # Reusable monitor form with validation and protocol detection
+├── context/
+│   └── AuthContext.tsx   # Global authentication state, tokens, user profile
+├── pages/
+│   ├── HomePage.tsx      # Landing page explaining features & value prop
+│   ├── LoginPage.tsx     # Sign-in form with error banners and loading states
+│   ├── RegisterPage.tsx  # Sign-up form with password validation
+│   ├── DashboardPage.tsx # Live monitors grid, KPI counters, skeletons, and quick actions
+│   ├── NewMonitorPage.tsx# Form for creating new automated health checks
+│   └── MonitorDetailPage.tsx # Real-time telemetry, 24h SLA stats, and check history table
+└── types/
+    └── index.ts          # Strongly typed TypeScript interfaces
 ```
+
+---
+
+## 🎨 UI/UX Features
+
+* **TailwindCSS v4:** Sleek dark slate theme (`slate-950` / `slate-900` / `emerald-500`) optimized for telemetry monitoring.
+* **Notification Feedback:** Integrated `react-hot-toast` with dark theme styling for real-time feedback (pausing, resuming, deleting, creating monitors).
+* **Silent Token Refresh:** Transparent Axios interceptor catches expired JWT tokens (`401 Unauthorized`), fetches a new access token via `/api/auth/login/refresh/`, and replays failed requests seamlessly.
+* **Mobile-Responsive:** Adaptive layouts for smartphones, tablets, and wide-screen desktops.
+
+---
+
+## 🛠️ Development & Build
+
+### Install Dependencies
+```bash
+npm install
+```
+
+### Start Development Server
+```bash
+npm run dev
+```
+Accessible at `http://localhost:5173/`.
+
+### Typecheck & Production Build
+```bash
+npm run build
+```
+Build output is saved to `dist/`.
