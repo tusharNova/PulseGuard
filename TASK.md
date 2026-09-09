@@ -122,13 +122,13 @@
 - [x] **Commit 5:** Add "Pause/Resume" button to toggle monitor active status.
 
 ### Day 13: UI Polish & Feedback
-- [ ] **Daytime Learning:** CSS basics, UI/UX principles for dashboards.
-- [ ] **Nighttime Doc:** Write down key concepts learned today.
-- [ ] **Commit 1:** Add a Toast notification system (e.g., success/error messages).
-- [ ] **Commit 2:** Improve global styling and layout.
-- [ ] **Commit 3:** Ensure responsive layout (mobile friendly).
-- [ ] **Commit 4:** Clean up unused CSS.
-- [ ] **Commit 5:** Update frontend documentation.
+- [x] **Daytime Learning:** CSS basics, UI/UX principles for dashboards.
+- [x] **Nighttime Doc:** Write down key concepts learned today.
+- [x] **Commit 1:** Add a Toast notification system (e.g., success/error messages).
+- [x] **Commit 2:** Improve global styling and layout.
+- [x] **Commit 3:** Ensure responsive layout (mobile friendly).
+- [x] **Commit 4:** Clean up unused CSS.
+- [x] **Commit 5:** Update frontend documentation.
 
 ### Day 14: Introduction to Recharts
 - [ ] **Daytime Learning:** SVG charts, Recharts library basics, formatting time-series data.
