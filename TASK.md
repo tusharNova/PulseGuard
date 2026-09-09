@@ -153,13 +153,13 @@
 - [x] **Commit 5:** Optimize chart rendering.
 
 ### Day 16: Alerting Foundation (Backend)
-- [ ] **Daytime Learning:** Webhooks, how email systems work (SMTP).
-- [ ] **Nighttime Doc:** Write down key concepts learned today.
-- [ ] **Commit 1:** Create `Alert` model in Django.
-- [ ] **Commit 2:** Add logic to detect state change (UP to DOWN).
-- [ ] **Commit 3:** Trigger alert event on state change.
-- [ ] **Commit 4:** Log alert history to database.
-- [ ] **Commit 5:** Refactor Celery ping task for cleanliness.
+- [x] **Daytime Learning:** Webhooks, how email systems work (SMTP).
+- [x] **Nighttime Doc:** Write down key concepts learned today.
+- [x] **Commit 1:** Create `Alert` model in Django.
+- [x] **Commit 2:** Add logic to detect state change (UP to DOWN).
+- [x] **Commit 3:** Trigger alert event on state change.
+- [x] **Commit 4:** Log alert history to database.
+- [x] **Commit 5:** Refactor Celery ping task for cleanliness.
 
 ### Day 17: Simulating Email Alerts
 - [ ] **Daytime Learning:** Using Django's console email backend.
