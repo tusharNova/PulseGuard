@@ -19,6 +19,7 @@ import {
 import toast from "react-hot-toast";
 import { monitorsApi } from "../api/monitors";
 import type { CheckResult, Monitor, UptimeStats } from "../types";
+import { LatencyChart } from "../components/LatencyChart";
 
 export const MonitorDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -312,6 +313,21 @@ export const MonitorDetailPage: React.FC = () => {
             />
           </div>
         </div>
+      </div>
+
+      {/* Latency Telemetry Chart */}
+      <div className="rounded-2xl border border-slate-800 bg-slate-900/50 backdrop-blur-sm p-6 mb-8">
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <h2 className="text-base font-semibold text-white">Response Time Telemetry</h2>
+            <p className="text-xs text-slate-400 mt-0.5">Chronological latency graph (ms) across recorded checks</p>
+          </div>
+          <div className="flex items-center space-x-2 text-xs text-emerald-400">
+            <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+            <span>Live Latency</span>
+          </div>
+        </div>
+        <LatencyChart data={history} />
       </div>
 
       {/* History Table */}
