@@ -113,13 +113,13 @@
 - [x] **Commit 5:** Refactor form component for reusability.
 
 ### Day 12: Monitor Detail View
-- [ ] **Daytime Learning:** URL parameters in React Router.
-- [ ] **Nighttime Doc:** Write down key concepts learned today.
-- [ ] **Commit 1:** Create new route `/monitors/:id`.
-- [ ] **Commit 2:** Fetch specific monitor details by ID.
-- [ ] **Commit 3:** Fetch recent `CheckResult` history for the monitor.
-- [ ] **Commit 4:** Build UI showing current status and uptime percentage.
-- [ ] **Commit 5:** Add "Pause/Resume" button to toggle monitor active status.
+- [x] **Daytime Learning:** URL parameters in React Router.
+- [x] **Nighttime Doc:** Write down key concepts learned today.
+- [x] **Commit 1:** Create new route `/monitors/:id`.
+- [x] **Commit 2:** Fetch specific monitor details by ID.
+- [x] **Commit 3:** Fetch recent `CheckResult` history for the monitor.
+- [x] **Commit 4:** Build UI showing current status and uptime percentage.
+- [x] **Commit 5:** Add "Pause/Resume" button to toggle monitor active status.
 
 ### Day 13: UI Polish & Feedback
 - [ ] **Daytime Learning:** CSS basics, UI/UX principles for dashboards.
