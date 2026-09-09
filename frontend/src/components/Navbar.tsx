@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Activity, LogIn, LayoutDashboard, ShieldCheck, User as UserIcon } from "lucide-react";
+import { Activity, LogIn, LayoutDashboard, Settings as SettingsIcon, ShieldCheck, User as UserIcon } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 
 export const Navbar: React.FC = () => {
@@ -26,13 +26,21 @@ export const Navbar: React.FC = () => {
                 <LayoutDashboard className="h-4 w-4 text-emerald-400" />
                 <span>Dashboard</span>
               </Link>
-              <div className="flex items-center space-x-2 text-xs text-slate-400 border-l border-slate-800 pl-4 py-1">
+              <Link
+                to="/settings"
+                className="flex items-center space-x-1.5 px-3 py-2 rounded-lg text-sm text-slate-300 hover:text-white hover:bg-slate-800 transition"
+                title="Account Settings & Alerts"
+              >
+                <SettingsIcon className="h-4 w-4 text-slate-400" />
+                <span className="hidden sm:inline">Settings</span>
+              </Link>
+              <div className="flex items-center space-x-2 text-xs text-slate-400 border-l border-slate-800 pl-3 py-1">
                 <UserIcon className="h-3.5 w-3.5 text-slate-500" />
                 <span className="hidden sm:inline font-mono">{user?.email}</span>
               </div>
               <button
                 onClick={logout}
-                className="px-3.5 py-1.5 rounded-lg text-sm bg-slate-800 hover:bg-slate-700 text-slate-200 transition border border-slate-700 cursor-pointer"
+                className="px-3 py-1.5 rounded-lg text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 transition border border-slate-700 cursor-pointer"
               >
                 Logout
               </button>

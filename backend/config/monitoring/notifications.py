@@ -10,7 +10,7 @@ def send_monitor_down_alert(monitor, alert) -> bool:
     Dispatches a 'Site DOWN' incident notification email to the monitor owner.
     """
     user_email = monitor.user.email
-    if not user_email:
+    if not user_email or not getattr(monitor.user, "email_alerts_enabled", True):
         return False
 
     subject = f"🚨 [DOWN ALERT] {monitor.name} is unreachable"
@@ -46,7 +46,7 @@ def send_monitor_up_alert(monitor, alert) -> bool:
     Dispatches a 'Site RECOVERED' resolution notification email to the monitor owner.
     """
     user_email = monitor.user.email
-    if not user_email:
+    if not user_email or not getattr(monitor.user, "email_alerts_enabled", True):
         return False
 
     subject = f"✅ [RECOVERED] {monitor.name} is back online"

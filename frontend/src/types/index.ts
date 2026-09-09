@@ -3,6 +3,7 @@ export interface User {
   email: string;
   first_name: string;
   last_name: string;
+  email_alerts_enabled?: boolean;
   created_at?: string;
   update_at?: string;
 }

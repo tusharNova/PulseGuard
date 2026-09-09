@@ -9,6 +9,7 @@ import { RegisterPage } from "./pages/RegisterPage";
 import { DashboardPage } from "./pages/DashboardPage";
 import { NewMonitorPage } from "./pages/NewMonitorPage";
 import { MonitorDetailPage } from "./pages/MonitorDetailPage";
+import { SettingsPage } from "./pages/SettingsPage";
 import { Toaster } from "react-hot-toast";
 
 export const App: React.FC = () => {
@@ -53,6 +54,7 @@ export const App: React.FC = () => {
                 <Route path="/dashboard" element={<DashboardPage />} />
                 <Route path="/monitors/new" element={<NewMonitorPage />} />
                 <Route path="/monitors/:id" element={<MonitorDetailPage />} />
+                <Route path="/settings" element={<SettingsPage />} />
               </Route>
             </Routes>
           </main>

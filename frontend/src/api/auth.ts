@@ -28,4 +28,9 @@ export const authApi = {
     const res = await apiClient.get<User>("/auth/me/");
     return res.data;
   },
+
+  updateProfile: async (payload: Partial<User>): Promise<User> => {
+    const res = await apiClient.patch<User>("/auth/me/", payload);
+    return res.data;
+  },
 };
