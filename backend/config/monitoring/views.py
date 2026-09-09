@@ -16,7 +16,10 @@ class MonitorViewSet(viewsets.ModelViewSet):
         """
         Multi-tenant isolation: Users can only see and manipulate their own monitors.
         """
-        return Monitor.objects.filter(user=self.request.user)
+        return (
+            Monitor.objects.filter(user=self.request.user)
+            .prefetch_related("check_results")
+        )
 
     def perform_create(self, serializer):
         """

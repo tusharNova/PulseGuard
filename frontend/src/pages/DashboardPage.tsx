@@ -19,6 +19,7 @@ import {
 import toast from "react-hot-toast";
 import { monitorsApi } from "../api/monitors";
 import type { Monitor } from "../types";
+import { StatusBar } from "../components/StatusBar";
 
 export const DashboardPage: React.FC = () => {
   const [monitors, setMonitors] = useState<Monitor[]>([]);
@@ -254,6 +255,10 @@ export const DashboardPage: React.FC = () => {
                   </span>
                   <span>•</span>
                   <span>Every {monitor.interval}s</span>
+                </div>
+
+                <div className="mt-4 pt-3 border-t border-slate-800/50">
+                  <StatusBar checks={monitor.recent_checks || []} maxBars={20} showLabels={false} />
                 </div>
               </div>
 

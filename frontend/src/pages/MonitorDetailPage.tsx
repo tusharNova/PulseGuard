@@ -20,6 +20,7 @@ import toast from "react-hot-toast";
 import { monitorsApi } from "../api/monitors";
 import type { CheckResult, Monitor, UptimeStats } from "../types";
 import { LatencyChart } from "../components/LatencyChart";
+import { StatusBar } from "../components/StatusBar";
 
 export const MonitorDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -236,6 +237,20 @@ export const MonitorDetailPage: React.FC = () => {
               {monitor.monitor_type}
             </div>
           </div>
+        </div>
+
+        {/* Real-time Segmented Status Bar */}
+        <div className="mt-6 pt-5 border-t border-slate-800/80 w-full">
+          <div className="flex items-center justify-between text-xs text-slate-400 mb-2">
+            <span className="font-semibold text-white">Live Uptime Status (Last 45 Checks)</span>
+            <span>{stats ? `${stats.uptime_percentage}% 24h SLA` : "100% Uptime"}</span>
+          </div>
+          <StatusBar
+            checks={history}
+            maxBars={45}
+            uptimePercentage={stats?.uptime_percentage}
+            showLabels={true}
+          />
         </div>
       </div>
 
