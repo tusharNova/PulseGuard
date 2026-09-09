@@ -95,13 +95,13 @@
 - [x] **Commit 5:** Implement Protected Routes in React Router.
 
 ### Day 10: The Dashboard & API Integration
-- [ ] **Daytime Learning:** Fetching data in React, handling loading states and errors.
-- [ ] **Nighttime Doc:** Write down key concepts learned today.
-- [ ] **Commit 1:** Build an `api.ts` service file for backend communication.
-- [ ] **Commit 2:** Fetch the user's monitors from backend.
-- [ ] **Commit 3:** Display monitors in a list/grid on Dashboard.
-- [ ] **Commit 4:** Add loading spinners while fetching.
-- [ ] **Commit 5:** Handle and display fetch errors gracefully.
+- [x] **Daytime Learning:** Fetching data in React, handling loading states and errors.
+- [x] **Nighttime Doc:** Write down key concepts learned today.
+- [x] **Commit 1:** Build an `api.ts` service file for backend communication.
+- [x] **Commit 2:** Fetch the user's monitors from backend.
+- [x] **Commit 3:** Display monitors in a list/grid on Dashboard.
+- [x] **Commit 4:** Add loading spinners while fetching.
+- [x] **Commit 5:** Handle and display fetch errors gracefully.
 
 ### Day 11: Creating Monitors (Forms)
 - [ ] **Daytime Learning:** Handling forms in React, form validation.
