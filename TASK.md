@@ -104,13 +104,13 @@
 - [x] **Commit 5:** Handle and display fetch errors gracefully.
 
 ### Day 11: Creating Monitors (Forms)
-- [ ] **Daytime Learning:** Handling forms in React, form validation.
-- [ ] **Nighttime Doc:** Write down key concepts learned today.
-- [ ] **Commit 1:** Create "New Monitor" form component.
-- [ ] **Commit 2:** Add frontend form validation logic.
-- [ ] **Commit 3:** Write POST request to send data to Django.
-- [ ] **Commit 4:** Automatically update dashboard list after creation.
-- [ ] **Commit 5:** Refactor form component for reusability.
+- [x] **Daytime Learning:** Handling forms in React, form validation.
+- [x] **Nighttime Doc:** Write down key concepts learned today.
+- [x] **Commit 1:** Create "New Monitor" form component.
+- [x] **Commit 2:** Add frontend form validation logic.
+- [x] **Commit 3:** Write POST request to send data to Django.
+- [x] **Commit 4:** Automatically update dashboard list after creation.
+- [x] **Commit 5:** Refactor form component for reusability.
 
 ### Day 12: Monitor Detail View
 - [ ] **Daytime Learning:** URL parameters in React Router.
