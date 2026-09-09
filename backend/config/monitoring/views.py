@@ -5,7 +5,7 @@ from rest_framework import permissions, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from .models import CheckResult, Monitor
-from .serializers import CheckResultSerializer, MonitorSerializer
+from .serializers import AlertSerializer, CheckResultSerializer, MonitorSerializer
 
 
 class MonitorViewSet(viewsets.ModelViewSet):
@@ -16,9 +16,8 @@ class MonitorViewSet(viewsets.ModelViewSet):
         """
         Multi-tenant isolation: Users can only see and manipulate their own monitors.
         """
-        return (
-            Monitor.objects.filter(user=self.request.user)
-            .prefetch_related("check_results")
+        return Monitor.objects.filter(user=self.request.user).prefetch_related(
+            "check_results"
         )
 
     def perform_create(self, serializer):
@@ -35,6 +34,16 @@ class MonitorViewSet(viewsets.ModelViewSet):
         monitor = self.get_object()
         results = monitor.check_results.all()[:50]
         serializer = CheckResultSerializer(results, many=True)
+        return Response(serializer.data)
+
+    @action(detail=True, methods=["get"], url_path="alerts")
+    def alerts(self, request, pk=None):
+        """
+        Retrieve incident and recovery alerts for this monitor.
+        """
+        monitor = self.get_object()
+        alerts = monitor.alerts.all()[:50]
+        serializer = AlertSerializer(alerts, many=True)
         return Response(serializer.data)
 
     @action(detail=True, methods=["get"], url_path="uptime-stats")

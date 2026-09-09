@@ -6,7 +6,7 @@ from django.urls import reverse
 from django.utils import timezone
 from rest_framework import status
 from rest_framework.test import APITestCase
-from .models import CheckResult, Monitor
+from .models import Alert, CheckResult, Monitor
 from .tasks import dispatch_active_monitors_task, ping_monitor_task
 
 User = get_user_model()
@@ -266,6 +266,25 @@ class MonitorAPITests(APITestCase):
         self.assertEqual(response.data["count"], 1)
         self.assertEqual(response.data["results"][0]["monitor"], monitor1.id)
 
+    def test_monitor_alerts_endpoint(self):
+        monitor = Monitor.objects.create(
+            user=self.user1, name="Alert Target", url="https://alert.io"
+        )
+        Alert.objects.create(
+            monitor=monitor,
+            alert_type="DOWN",
+            message="Server crashed with 500 error",
+        )
+
+        alerts_url = reverse("monitoring:monitor-alerts", kwargs={"pk": monitor.id})
+        self.client.force_authenticate(user=self.user1)
+        response = self.client.get(alerts_url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)
+        self.assertEqual(response.data[0]["alert_type"], "DOWN")
+        self.assertEqual(response.data[0]["message"], "Server crashed with 500 error")
+
 
 class PingerTaskTests(APITestCase):
     def setUp(self):
@@ -330,6 +349,63 @@ class PingerTaskTests(APITestCase):
         result = ping_monitor_task(str(self.monitor.id))
         self.assertEqual(result["status"], "skipped")
         self.assertEqual(self.monitor.check_results.count(), 0)
+
+    @mock.patch("requests.get")
+    def test_alert_triggered_on_up_to_down_transition(self, mock_get):
+        # Seed prior UP check
+        CheckResult.objects.create(monitor=self.monitor, status_code=200, is_up=True)
+
+        mock_resp = mock.MagicMock()
+        mock_resp.status_code = 500
+        mock_get.return_value = mock_resp
+
+        result = ping_monitor_task(str(self.monitor.id))
+        self.assertFalse(result["is_up"])
+        self.assertIsNotNone(result["alert_created"])
+
+        alert = self.monitor.alerts.first()
+        self.assertIsNotNone(alert)
+        self.assertEqual(alert.alert_type, "DOWN")
+        self.assertFalse(alert.is_resolved)
+
+    @mock.patch("requests.get")
+    def test_alert_triggered_on_down_to_up_recovery(self, mock_get):
+        # Seed prior DOWN check and unresolved DOWN alert
+        CheckResult.objects.create(monitor=self.monitor, status_code=500, is_up=False)
+        down_alert = Alert.objects.create(
+            monitor=self.monitor,
+            alert_type="DOWN",
+            message="Server is down",
+            is_resolved=False,
+        )
+
+        mock_resp = mock.MagicMock()
+        mock_resp.status_code = 200
+        mock_get.return_value = mock_resp
+
+        result = ping_monitor_task(str(self.monitor.id))
+        self.assertTrue(result["is_up"])
+
+        down_alert.refresh_from_db()
+        self.assertTrue(down_alert.is_resolved)
+
+        recovery_alert = self.monitor.alerts.filter(alert_type="UP").first()
+        self.assertIsNotNone(recovery_alert)
+        self.assertTrue(recovery_alert.is_resolved)
+
+    @mock.patch("requests.get")
+    def test_no_alert_when_state_unchanged(self, mock_get):
+        # Seed prior UP check
+        CheckResult.objects.create(monitor=self.monitor, status_code=200, is_up=True)
+
+        mock_resp = mock.MagicMock()
+        mock_resp.status_code = 200
+        mock_get.return_value = mock_resp
+
+        result = ping_monitor_task(str(self.monitor.id))
+        self.assertTrue(result["is_up"])
+        self.assertIsNone(result["alert_created"])
+        self.assertEqual(self.monitor.alerts.count(), 0)
 
 
 class DispatcherTaskTests(APITestCase):

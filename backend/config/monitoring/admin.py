@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import CheckResult, Monitor
+from .models import Alert, CheckResult, Monitor
 
 
 @admin.register(Monitor)
@@ -24,3 +24,11 @@ class CheckResultAdmin(admin.ModelAdmin):
     search_fields = ("monitor__name", "monitor__url", "error_message")
     list_filter = ("is_up", "timestamp", "status_code")
     ordering = ("-timestamp",)
+
+
+@admin.register(Alert)
+class AlertAdmin(admin.ModelAdmin):
+    list_display = ("monitor", "alert_type", "is_resolved", "created_at")
+    search_fields = ("monitor__name", "message")
+    list_filter = ("alert_type", "is_resolved", "created_at")
+    ordering = ("-created_at",)

@@ -1,5 +1,19 @@
 from rest_framework import serializers
-from .models import CheckResult, Monitor
+from .models import Alert, CheckResult, Monitor
+
+
+class AlertSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Alert
+        fields = (
+            "id",
+            "monitor",
+            "alert_type",
+            "message",
+            "is_resolved",
+            "created_at",
+        )
+        read_only_fields = fields
 
 
 class CheckResultSerializer(serializers.ModelSerializer):

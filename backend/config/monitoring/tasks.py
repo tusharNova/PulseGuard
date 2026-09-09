@@ -1,14 +1,15 @@
 import time
 import requests
 from celery import shared_task
-from .models import CheckResult, Monitor
+from .models import Alert, CheckResult, Monitor
 
 
 @shared_task(bind=True, max_retries=1)
 def ping_monitor_task(self, monitor_id):
     """
     Asynchronous Celery task that executes an HTTP GET health check for a monitor,
-    measures latency, captures failures/timeouts, and records a CheckResult.
+    measures latency, captures failures/timeouts, detects state transitions (UP/DOWN),
+    triggers alert events, and records a CheckResult.
     """
     try:
         monitor = Monitor.objects.get(id=monitor_id)
@@ -57,6 +58,32 @@ def ping_monitor_task(self, monitor_id):
         is_up = False
         error_message = f"Request error: {str(e)}"
 
+    # Detect state transition (UP -> DOWN or DOWN -> UP) before recording new check
+    last_check = monitor.check_results.first()
+    alert_created = None
+
+    if last_check is not None:
+        if last_check.is_up and not is_up:
+            # Transition: UP -> DOWN
+            alert = Alert.objects.create(
+                monitor=monitor,
+                alert_type=Alert.AlertType.DOWN,
+                message=f"Monitor '{monitor.name}' ({monitor.url}) has gone DOWN: {error_message or 'Service unavailable'}",
+            )
+            alert_created = str(alert.id)
+        elif not last_check.is_up and is_up:
+            # Transition: DOWN -> UP (Recovery)
+            alert = Alert.objects.create(
+                monitor=monitor,
+                alert_type=Alert.AlertType.UP,
+                message=f"Monitor '{monitor.name}' ({monitor.url}) has RECOVERED and is back online.",
+                is_resolved=True,
+            )
+            monitor.alerts.filter(
+                alert_type=Alert.AlertType.DOWN, is_resolved=False
+            ).update(is_resolved=True)
+            alert_created = str(alert.id)
+
     # Record the health check result
     check_result = CheckResult.objects.create(
         monitor=monitor,
@@ -73,6 +100,7 @@ def ping_monitor_task(self, monitor_id):
         "response_time_ms": response_time_ms,
         "is_up": is_up,
         "error_message": error_message,
+        "alert_created": alert_created,
     }
 
 

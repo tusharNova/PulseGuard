@@ -59,3 +59,29 @@ class CheckResult(models.Model):
     def __str__(self):
         status_str = "UP" if self.is_up else "DOWN"
         return f"{self.monitor.name} - {status_str} at {self.timestamp}"
+
+
+class Alert(models.Model):
+    class AlertType(models.TextChoices):
+        DOWN = "DOWN", "Site Down"
+        UP = "UP", "Site Recovered"
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    monitor = models.ForeignKey(
+        Monitor,
+        on_delete=models.CASCADE,
+        related_name="alerts",
+    )
+    alert_type = models.CharField(
+        max_length=20,
+        choices=AlertType.choices,
+    )
+    message = models.TextField()
+    is_resolved = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return f"[{self.alert_type}] {self.monitor.name} - {self.created_at}"
