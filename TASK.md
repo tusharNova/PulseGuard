@@ -180,13 +180,13 @@
 - [x] **Commit 5:** Handle successful updates with toast notifications.
 
 ### Day 19: Backend Unit Testing
-- [ ] **Daytime Learning:** Automated testing principles, Pytest vs Unittest, Mocking.
-- [ ] **Nighttime Doc:** Write down key concepts learned today.
-- [ ] **Commit 1:** Install and configure `pytest-django`.
-- [ ] **Commit 2:** Write tests for `Monitor` API endpoints.
-- [ ] **Commit 3:** Write tests for Uptime calculation logic.
-- [ ] **Commit 4:** Mock `requests.get` to test Celery ping task.
-- [ ] **Commit 5:** Set up test coverage reporting.
+- [x] **Daytime Learning:** Automated testing principles, Pytest vs Unittest, Mocking.
+- [x] **Nighttime Doc:** Write down key concepts learned today.
+- [x] **Commit 1:** Install and configure `pytest-django`.
+- [x] **Commit 2:** Write tests for `Monitor` API endpoints.
+- [x] **Commit 3:** Write tests for Uptime calculation logic.
+- [x] **Commit 4:** Mock `requests.get` to test Celery ping task.
+- [x] **Commit 5:** Set up test coverage reporting.
 
 ### Day 20: Frontend Unit Testing
 - [ ] **Daytime Learning:** React Testing Library, Jest.
