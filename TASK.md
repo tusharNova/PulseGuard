@@ -131,13 +131,13 @@
 - [x] **Commit 5:** Update frontend documentation.
 
 ### Day 14: Introduction to Recharts
-- [ ] **Daytime Learning:** SVG charts, Recharts library basics, formatting time-series data.
-- [ ] **Nighttime Doc:** Write down key concepts learned today.
-- [ ] **Commit 1:** Install Recharts and setup base chart component.
-- [ ] **Commit 2:** Format `CheckResult` data for the chart.
-- [ ] **Commit 3:** Build a LineChart showing Response Time over 24 hours.
-- [ ] **Commit 4:** Add custom tooltips and styling to chart.
-- [ ] **Commit 5:** Final bug fixes for Phase 2.
+- [x] **Daytime Learning:** SVG charts, Recharts library basics, formatting time-series data.
+- [x] **Nighttime Doc:** Write down key concepts learned today.
+- [x] **Commit 1:** Install Recharts and setup base chart component.
+- [x] **Commit 2:** Format `CheckResult` data for the chart.
+- [x] **Commit 3:** Build a LineChart showing Response Time over 24 hours.
+- [x] **Commit 4:** Add custom tooltips and styling to chart.
+- [x] **Commit 5:** Final bug fixes for Phase 2.
 
 ---
 
