@@ -8,6 +8,7 @@ import { LoginPage } from "./pages/LoginPage";
 import { RegisterPage } from "./pages/RegisterPage";
 import { DashboardPage } from "./pages/DashboardPage";
 import { NewMonitorPage } from "./pages/NewMonitorPage";
+import { MonitorDetailPage } from "./pages/MonitorDetailPage";
 
 export const App: React.FC = () => {
   return (
@@ -26,6 +27,7 @@ export const App: React.FC = () => {
               <Route element={<ProtectedRoute />}>
                 <Route path="/dashboard" element={<DashboardPage />} />
                 <Route path="/monitors/new" element={<NewMonitorPage />} />
+                <Route path="/monitors/:id" element={<MonitorDetailPage />} />
               </Route>
             </Routes>
           </main>
