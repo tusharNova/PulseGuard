@@ -79,3 +79,26 @@ class AuthAPITests(APITestCase):
     def test_user_profile_unauthenticated(self):
         response = self.client.get(self.profile_url)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_user_profile_partial_update_settings(self):
+        user = User.objects.create_user(**self.user_data)
+        self.client.force_authenticate(user=user)
+
+        patch_payload = {
+            "first_name": "UpdatedName",
+            "last_name": "UpdatedLast",
+            "email_alerts_enabled": False,
+        }
+        response = self.client.patch(self.profile_url, patch_payload, format="json")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["first_name"], "UpdatedName")
+        self.assertEqual(response.data["last_name"], "UpdatedLast")
+        self.assertFalse(response.data["email_alerts_enabled"])
+
+        # Verify persisted in database
+        user.refresh_from_db()
+        self.assertEqual(user.first_name, "UpdatedName")
+        self.assertEqual(user.last_name, "UpdatedLast")
+        self.assertFalse(user.email_alerts_enabled)
+        # Email cannot be modified via profile update
+        self.assertEqual(user.email, self.user_data["email"])

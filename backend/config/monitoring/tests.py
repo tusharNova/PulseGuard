@@ -375,6 +375,29 @@ class PingerTaskTests(APITestCase):
         self.assertEqual(mail.outbox[0].to, [self.user.email])
 
     @mock.patch("requests.get")
+    def test_alert_email_suppressed_when_notifications_disabled(self, mock_get):
+        # Disable email alerts for user
+        self.user.email_alerts_enabled = False
+        self.user.save()
+
+        # Seed prior UP check
+        CheckResult.objects.create(monitor=self.monitor, status_code=200, is_up=True)
+
+        mock_resp = mock.MagicMock()
+        mock_resp.status_code = 500
+        mock_get.return_value = mock_resp
+
+        result = ping_monitor_task(str(self.monitor.id))
+        self.assertFalse(result["is_up"])
+        self.assertIsNotNone(result["alert_created"])
+
+        # Alert record IS created in database
+        self.assertEqual(self.monitor.alerts.count(), 1)
+
+        # But NO email was dispatched
+        self.assertEqual(len(mail.outbox), 0)
+
+    @mock.patch("requests.get")
     def test_alert_triggered_on_down_to_up_recovery(self, mock_get):
         # Seed prior DOWN check and unresolved DOWN alert
         CheckResult.objects.create(monitor=self.monitor, status_code=500, is_up=False)
