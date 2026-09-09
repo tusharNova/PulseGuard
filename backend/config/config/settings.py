@@ -159,3 +159,11 @@ CELERY_BEAT_SCHEDULE = {
         "schedule": 60.0,  # Run every 60 seconds
     },
 }
+
+# Email Alert Configuration (Console Backend for Development / Staging)
+EMAIL_BACKEND = os.getenv(
+    "EMAIL_BACKEND", "django.core.mail.backends.console.EmailBackend"
+)
+DEFAULT_FROM_EMAIL = os.getenv(
+    "DEFAULT_FROM_EMAIL", "PulseGuard Alerts <alerts@pulseguard.io>"
+)

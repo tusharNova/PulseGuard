@@ -2,6 +2,7 @@ import time
 import requests
 from celery import shared_task
 from .models import Alert, CheckResult, Monitor
+from .notifications import send_monitor_down_alert, send_monitor_up_alert
 
 
 @shared_task(bind=True, max_retries=1)
@@ -71,6 +72,7 @@ def ping_monitor_task(self, monitor_id):
                 message=f"Monitor '{monitor.name}' ({monitor.url}) has gone DOWN: {error_message or 'Service unavailable'}",
             )
             alert_created = str(alert.id)
+            send_monitor_down_alert(monitor, alert)
         elif not last_check.is_up and is_up:
             # Transition: DOWN -> UP (Recovery)
             alert = Alert.objects.create(
@@ -83,6 +85,7 @@ def ping_monitor_task(self, monitor_id):
                 alert_type=Alert.AlertType.DOWN, is_resolved=False
             ).update(is_resolved=True)
             alert_created = str(alert.id)
+            send_monitor_up_alert(monitor, alert)
 
     # Record the health check result
     check_result = CheckResult.objects.create(

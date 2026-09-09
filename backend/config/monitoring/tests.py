@@ -2,6 +2,7 @@ import datetime
 from unittest import mock
 import requests
 from django.contrib.auth import get_user_model
+from django.core import mail
 from django.urls import reverse
 from django.utils import timezone
 from rest_framework import status
@@ -368,6 +369,11 @@ class PingerTaskTests(APITestCase):
         self.assertEqual(alert.alert_type, "DOWN")
         self.assertFalse(alert.is_resolved)
 
+        # Verify incident alert email was dispatched
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertIn("DOWN ALERT", mail.outbox[0].subject)
+        self.assertEqual(mail.outbox[0].to, [self.user.email])
+
     @mock.patch("requests.get")
     def test_alert_triggered_on_down_to_up_recovery(self, mock_get):
         # Seed prior DOWN check and unresolved DOWN alert
@@ -393,6 +399,11 @@ class PingerTaskTests(APITestCase):
         self.assertIsNotNone(recovery_alert)
         self.assertTrue(recovery_alert.is_resolved)
 
+        # Verify recovery alert email was dispatched
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertIn("RECOVERED", mail.outbox[0].subject)
+        self.assertEqual(mail.outbox[0].to, [self.user.email])
+
     @mock.patch("requests.get")
     def test_no_alert_when_state_unchanged(self, mock_get):
         # Seed prior UP check
@@ -406,6 +417,7 @@ class PingerTaskTests(APITestCase):
         self.assertTrue(result["is_up"])
         self.assertIsNone(result["alert_created"])
         self.assertEqual(self.monitor.alerts.count(), 0)
+        self.assertEqual(len(mail.outbox), 0)
 
 
 class DispatcherTaskTests(APITestCase):

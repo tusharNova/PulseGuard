@@ -74,4 +74,13 @@ uv run python manage.py test
   * `GET, PUT, PATCH, DELETE /api/monitors/<id>/` - Retrieve/Update/Delete monitor
   * `GET /api/monitors/<id>/history/` - Recent 50 checks for charting
   * `GET /api/monitors/<id>/uptime-stats/` - 24-hour uptime percentage & average latency
+  * `GET /api/monitors/<id>/alerts/` - Incident and recovery alert history
   * `GET /api/check-results/` - Paginated check result history (`?monitor=<id>`)
+
+---
+
+## 6. Email Alerting & Notification Flow
+PulseGuard includes state-transition event detection:
+* **Incident Detection (UP ➡️ DOWN):** Generates an `Alert` record and dispatches an immediate incident email (`🚨 [DOWN ALERT]`) to the monitor owner with failure cause, timestamp, and target URL.
+* **Resolution Detection (DOWN ➡️ UP):** Automatically resolves prior open incidents and dispatches a recovery email (`✅ [RECOVERED]`).
+* **Console Email Simulation:** In development, emails are printed directly to the standard output / worker console via Django's `console.EmailBackend`. To connect live SMTP or SendGrid in production, set `EMAIL_BACKEND` and standard SMTP environment variables.
