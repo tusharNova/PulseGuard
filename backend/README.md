@@ -84,3 +84,27 @@ PulseGuard includes state-transition event detection:
 * **Incident Detection (UP ➡️ DOWN):** Generates an `Alert` record and dispatches an immediate incident email (`🚨 [DOWN ALERT]`) to the monitor owner with failure cause, timestamp, and target URL.
 * **Resolution Detection (DOWN ➡️ UP):** Automatically resolves prior open incidents and dispatches a recovery email (`✅ [RECOVERED]`).
 * **Console Email Simulation:** In development, emails are printed directly to the standard output / worker console via Django's `console.EmailBackend`. To connect live SMTP or SendGrid in production, set `EMAIL_BACKEND` and standard SMTP environment variables.
+
+---
+
+## 7. Docker Containerization 🐳
+
+The backend includes a high-performance multi-stage `Dockerfile` powered by Astral UV and Gunicorn:
+
+### Build Backend Image
+```bash
+docker build -t pulseguard-backend:latest ./backend
+```
+
+### Run Backend Container
+```bash
+docker run -d \
+  --name pulseguard_backend \
+  -p 8000:8000 \
+  -e SECRET_KEY="your-secret-key" \
+  -e ALLOWED_HOSTS="*" \
+  -e CELERY_BROKER_URL="redis://host.docker.internal:6379/0" \
+  pulseguard-backend:latest
+```
+Container entrypoint automatically applies migrations and collects static files before launching Gunicorn with 3 worker processes.
+
