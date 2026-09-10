@@ -58,3 +58,12 @@ Accessible at `http://localhost:5173/`.
 npm run build
 ```
 Build output is saved to `dist/`.
+
+### Run Unit Tests
+```bash
+npm test
+# Or watch mode for test-driven development:
+npm run test:watch
+```
+Powered by Vitest, jsdom, and React Testing Library.
+
