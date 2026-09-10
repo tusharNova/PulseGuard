@@ -211,13 +211,13 @@
 ## Phase 4: Dockerization & Deployment (Days 22-28)
 
 ### Day 22: Dockerizing Django
-- [ ] **Daytime Learning:** Containerization concepts, Dockerfile syntax.
-- [ ] **Nighttime Doc:** Write down key concepts learned today.
-- [ ] **Commit 1:** Write `Dockerfile` for Django backend.
-- [ ] **Commit 2:** Set up Gunicorn as WSGI server.
-- [ ] **Commit 3:** Create entrypoint script for database migrations.
-- [ ] **Commit 4:** Build and test Docker image locally.
-- [ ] **Commit 5:** Document backend Docker setup.
+- [x] **Daytime Learning:** Containerization concepts, Dockerfile syntax.
+- [x] **Nighttime Doc:** Write down key concepts learned today.
+- [x] **Commit 1:** Write `Dockerfile` for Django backend.
+- [x] **Commit 2:** Set up Gunicorn as WSGI server.
+- [x] **Commit 3:** Create entrypoint script for database migrations.
+- [x] **Commit 4:** Build and test Docker image locally.
+- [x] **Commit 5:** Document backend Docker setup.
 
 ### Day 23: Dockerizing Celery
 - [ ] **Daytime Learning:** Running background processes in Docker.
