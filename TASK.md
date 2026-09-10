@@ -198,13 +198,13 @@
 - [x] **Commit 5:** Document testing instructions.
 
 ### Day 21: Performance & Indexing
-- [ ] **Daytime Learning:** Database indexing, EXPLAIN ANALYZE, N+1 query problem.
-- [ ] **Nighttime Doc:** Write down key concepts learned today.
-- [ ] **Commit 1:** Optimize Django queries using `select_related`/`prefetch_related`.
-- [ ] **Commit 2:** Add database indexes to `CheckResult` timestamp/monitor_id.
-- [ ] **Commit 3:** Install Django Debug Toolbar to analyze queries.
-- [ ] **Commit 4:** Refactor slow views or React components.
-- [ ] **Commit 5:** Weekly review and code cleanup.
+- [x] **Daytime Learning:** Database indexing, EXPLAIN ANALYZE, N+1 query problem.
+- [x] **Nighttime Doc:** Write down key concepts learned today.
+- [x] **Commit 1:** Optimize Django queries using `select_related`/`prefetch_related`.
+- [x] **Commit 2:** Add database indexes to `CheckResult` timestamp/monitor_id.
+- [x] **Commit 3:** Install Django Debug Toolbar to analyze queries.
+- [x] **Commit 4:** Refactor slow views or React components.
+- [x] **Commit 5:** Weekly review and code cleanup.
 
 ---
 
