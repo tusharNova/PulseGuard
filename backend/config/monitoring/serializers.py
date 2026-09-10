@@ -50,7 +50,10 @@ class MonitorSerializer(serializers.ModelSerializer):
         read_only_fields = ("id", "created_at", "updated_at", "recent_checks")
 
     def get_recent_checks(self, obj):
-        checks = obj.check_results.all()[:20]
+        if hasattr(obj, "prefetched_recent_checks"):
+            checks = obj.prefetched_recent_checks[:20]
+        else:
+            checks = obj.check_results.all()[:20]
         return CheckResultSerializer(checks, many=True).data
 
     def validate_interval(self, value):

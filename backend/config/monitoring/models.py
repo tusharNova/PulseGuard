@@ -32,6 +32,10 @@ class Monitor(models.Model):
 
     class Meta:
         ordering = ["-created_at"]
+        indexes = [
+            models.Index(fields=["is_active"], name="monitor_is_active_idx"),
+            models.Index(fields=["user", "is_active"], name="monitor_user_active_idx"),
+        ]
 
     def __str__(self):
         return f"{self.name} ({self.url})"
@@ -53,7 +57,9 @@ class CheckResult(models.Model):
     class Meta:
         ordering = ["-timestamp"]
         indexes = [
-            models.Index(fields=["monitor", "-timestamp"]),
+            models.Index(
+                fields=["monitor", "-timestamp"], name="checkresult_monitor_time_idx"
+            ),
         ]
 
     def __str__(self):
@@ -82,6 +88,12 @@ class Alert(models.Model):
 
     class Meta:
         ordering = ["-created_at"]
+        indexes = [
+            models.Index(
+                fields=["monitor", "is_resolved", "-created_at"],
+                name="alert_monitor_resolved_idx",
+            ),
+        ]
 
     def __str__(self):
         return f"[{self.alert_type}] {self.monitor.name} - {self.created_at}"

@@ -1,5 +1,5 @@
 import datetime
-from django.db.models import Avg, Count, Q
+from django.db.models import Avg, Count, Prefetch, Q
 from django.utils import timezone
 from rest_framework import permissions, viewsets
 from rest_framework.decorators import action
@@ -15,9 +15,15 @@ class MonitorViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         """
         Multi-tenant isolation: Users can only see and manipulate their own monitors.
+        Uses Prefetch with to_attr to eliminate N+1 queries when serializing recent_checks.
         """
+        recent_checks_prefetch = Prefetch(
+            "check_results",
+            queryset=CheckResult.objects.order_by("-timestamp"),
+            to_attr="prefetched_recent_checks",
+        )
         return Monitor.objects.filter(user=self.request.user).prefetch_related(
-            "check_results"
+            recent_checks_prefetch
         )
 
     def perform_create(self, serializer):

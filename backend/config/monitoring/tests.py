@@ -63,6 +63,34 @@ class MonitorAPITests(APITestCase):
         self.assertEqual(response.data["count"], 0)
         self.assertEqual(len(response.data["results"]), 0)
 
+    def test_list_monitors_no_n_plus_one_queries(self):
+        # Create 4 monitors for Alice with 5 checks each
+        self.client.force_authenticate(user=self.user1)
+        for i in range(4):
+            m = Monitor.objects.create(
+                user=self.user1,
+                name=f"Monitor {i}",
+                url=f"https://mon{i}.com",
+            )
+            for _ in range(5):
+                CheckResult.objects.create(
+                    monitor=m,
+                    status_code=200,
+                    response_time_ms=100.0,
+                    is_up=True,
+                )
+
+        # 1: count query for pagination
+        # 2: fetch monitors
+        # 3: prefetch check results
+        with self.assertNumQueries(3):
+            response = self.client.get(self.monitors_url)
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
+            self.assertEqual(response.data["count"], 4)
+            # Verify recent_checks are populated
+            for item in response.data["results"]:
+                self.assertEqual(len(item["recent_checks"]), 5)
+
     def test_tenant_isolation_cannot_access_other_users_monitor(self):
         # Alice creates a monitor
         monitor = Monitor.objects.create(

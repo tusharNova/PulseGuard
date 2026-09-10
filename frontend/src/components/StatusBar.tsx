@@ -8,7 +8,7 @@ interface StatusBarProps {
   showLabels?: boolean;
 }
 
-export const StatusBar: React.FC<StatusBarProps> = ({
+export const StatusBar: React.FC<StatusBarProps> = React.memo(({
   checks = [],
   maxBars = 30,
   uptimePercentage,
@@ -77,4 +77,5 @@ export const StatusBar: React.FC<StatusBarProps> = ({
       )}
     </div>
   );
-};
+});
+
