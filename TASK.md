@@ -189,13 +189,13 @@
 - [x] **Commit 5:** Set up test coverage reporting.
 
 ### Day 20: Frontend Unit Testing
-- [ ] **Daytime Learning:** React Testing Library, Jest.
-- [ ] **Nighttime Doc:** Write down key concepts learned today.
-- [ ] **Commit 1:** Set up testing in Vite project.
-- [ ] **Commit 2:** Write tests for Login form validation.
-- [ ] **Commit 3:** Write tests for Status Bar component.
-- [ ] **Commit 4:** Fix any broken tests.
-- [ ] **Commit 5:** Document testing instructions.
+- [x] **Daytime Learning:** React Testing Library, Jest.
+- [x] **Nighttime Doc:** Write down key concepts learned today.
+- [x] **Commit 1:** Set up testing in Vite project.
+- [x] **Commit 2:** Write tests for Login form validation.
+- [x] **Commit 3:** Write tests for Status Bar component.
+- [x] **Commit 4:** Fix any broken tests.
+- [x] **Commit 5:** Document testing instructions.
 
 ### Day 21: Performance & Indexing
 - [ ] **Daytime Learning:** Database indexing, EXPLAIN ANALYZE, N+1 query problem.
