@@ -1,10 +1,27 @@
 services:
+  db:
+    image: postgres:16-alpine
+    container_name: pulseguard_db
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-pulseguard}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-pulseguard}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
   redis:
     image: redis:7-alpine
     container_name: pulseguard_redis
     ports:
       - "6379:6379"
-    restart: unless-stopped
     volumes:
       - redis_data:/data
     healthcheck:
@@ -12,6 +29,7 @@ services:
       interval: 5s
       timeout: 3s
       retries: 5
+    restart: unless-stopped
 
   backend:
     build:
@@ -24,16 +42,23 @@ services:
       - SECRET_KEY=${SECRET_KEY:-django-insecure-dev-key-pulseguard-2026}
       - DEBUG=${DEBUG:-True}
       - ALLOWED_HOSTS=*
+      - POSTGRES_DB=${POSTGRES_DB:-pulseguard}
+      - POSTGRES_USER=${POSTGRES_USER:-postgres}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgres}
+      - POSTGRES_HOST=db
+      - POSTGRES_PORT=5432
       - REDIS_HOST=redis
       - REDIS_PORT=6379
       - CELERY_BROKER_URL=redis://redis:6379/0
       - CELERY_RESULT_BACKEND=redis://redis:6379/0
     depends_on:
+      db:
+        condition: service_healthy
       redis:
         condition: service_healthy
-    restart: unless-stopped
     volumes:
       - static_data:/app/config/staticfiles
+    restart: unless-stopped
 
   celery_worker:
     build:
@@ -43,11 +68,18 @@ services:
     command: celery -A config worker -l info -c 4
     environment:
       - SECRET_KEY=${SECRET_KEY:-django-insecure-dev-key-pulseguard-2026}
+      - POSTGRES_DB=${POSTGRES_DB:-pulseguard}
+      - POSTGRES_USER=${POSTGRES_USER:-postgres}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgres}
+      - POSTGRES_HOST=db
+      - POSTGRES_PORT=5432
       - REDIS_HOST=redis
       - REDIS_PORT=6379
       - CELERY_BROKER_URL=redis://redis:6379/0
       - CELERY_RESULT_BACKEND=redis://redis:6379/0
     depends_on:
+      db:
+        condition: service_healthy
       redis:
         condition: service_healthy
       backend:
@@ -62,11 +94,18 @@ services:
     command: celery -A config beat -l info
     environment:
       - SECRET_KEY=${SECRET_KEY:-django-insecure-dev-key-pulseguard-2026}
+      - POSTGRES_DB=${POSTGRES_DB:-pulseguard}
+      - POSTGRES_USER=${POSTGRES_USER:-postgres}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgres}
+      - POSTGRES_HOST=db
+      - POSTGRES_PORT=5432
       - REDIS_HOST=redis
       - REDIS_PORT=6379
       - CELERY_BROKER_URL=redis://redis:6379/0
       - CELERY_RESULT_BACKEND=redis://redis:6379/0
     depends_on:
+      db:
+        condition: service_healthy
       redis:
         condition: service_healthy
       backend:
@@ -81,10 +120,11 @@ services:
     ports:
       - "80:80"
     depends_on:
-      - backend
+      backend:
+        condition: service_started
     restart: unless-stopped
 
 volumes:
+  postgres_data:
   redis_data:
   static_data:
-
