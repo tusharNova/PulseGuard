@@ -220,13 +220,13 @@
 - [x] **Commit 5:** Document backend Docker setup.
 
 ### Day 23: Dockerizing Celery
-- [ ] **Daytime Learning:** Running background processes in Docker.
-- [ ] **Nighttime Doc:** Write down key concepts learned today.
-- [ ] **Commit 1:** Create Docker setup for Celery worker.
-- [ ] **Commit 2:** Create Docker setup for Celery Beat.
-- [ ] **Commit 3:** Configure Redis connection via environment variables.
-- [ ] **Commit 4:** Verify Celery works correctly in container.
-- [ ] **Commit 5:** Update documentation for Celery in Docker.
+- [x] **Daytime Learning:** Running background processes in Docker.
+- [x] **Nighttime Doc:** Write down key concepts learned today.
+- [x] **Commit 1:** Create Docker setup for Celery worker.
+- [x] **Commit 2:** Create Docker setup for Celery Beat.
+- [x] **Commit 3:** Configure Redis connection via environment variables.
+- [x] **Commit 4:** Verify Celery works correctly in container.
+- [x] **Commit 5:** Update documentation for Celery in Docker.
 
 ### Day 24: Dockerizing React & Nginx
 - [ ] **Daytime Learning:** Multi-stage Docker builds, Nginx reverse proxy.
