@@ -247,13 +247,13 @@
 - [x] **Commit 5:** Run full stack with `docker-compose up` and fix issues.
 
 ### Day 26: CI/CD Pipeline (GitHub Actions)
-- [ ] **Daytime Learning:** Continuous Integration (CI), GitHub Actions.
-- [ ] **Nighttime Doc:** Write down key concepts learned today.
-- [ ] **Commit 1:** Create `.github/workflows/main.yml`.
-- [ ] **Commit 2:** Add steps to run Django tests on push.
-- [ ] **Commit 3:** Add steps to run React tests on push.
-- [ ] **Commit 4:** Add linting or formatting checks.
-- [ ] **Commit 5:** Verify GitHub Actions run successfully.
+- [x] **Daytime Learning:** Continuous Integration (CI), GitHub Actions.
+- [x] **Nighttime Doc:** Write down key concepts learned today.
+- [x] **Commit 1:** Create `.github/workflows/main.yml`.
+- [x] **Commit 2:** Add steps to run Django tests on push.
+- [x] **Commit 3:** Add steps to run React tests on push.
+- [x] **Commit 4:** Add linting or formatting checks.
+- [x] **Commit 5:** Verify GitHub Actions run successfully.
 
 ### Day 27: Security & Polish
 - [ ] **Daytime Learning:** CORS, Web security basics.
