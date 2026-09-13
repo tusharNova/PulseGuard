@@ -108,3 +108,20 @@ docker run -d \
 ```
 Container entrypoint automatically applies migrations and collects static files before launching Gunicorn with 3 worker processes.
 
+### Run with Celery Worker & Beat via Docker Compose
+To run Django web, Celery worker, Celery beat scheduler, and Redis simultaneously:
+```bash
+docker compose up --build -d
+```
+
+### View Worker Logs
+```bash
+docker logs -f pulseguard_celery_worker
+```
+
+### View Beat Scheduler Logs
+```bash
+docker logs -f pulseguard_celery_beat
+```
+
+
