@@ -229,13 +229,13 @@
 - [x] **Commit 5:** Update documentation for Celery in Docker.
 
 ### Day 24: Dockerizing React & Nginx
-- [ ] **Daytime Learning:** Multi-stage Docker builds, Nginx reverse proxy.
-- [ ] **Nighttime Doc:** Write down key concepts learned today.
-- [ ] **Commit 1:** Write multi-stage `Dockerfile` for React.
-- [ ] **Commit 2:** Create `nginx.conf` for serving static files and React Router fallback.
-- [ ] **Commit 3:** Build frontend image.
-- [ ] **Commit 4:** Verify frontend runs and can access backend API.
-- [ ] **Commit 5:** Document frontend Docker setup.
+- [x] **Daytime Learning:** Multi-stage Docker builds, Nginx reverse proxy.
+- [x] **Nighttime Doc:** Write down key concepts learned today.
+- [x] **Commit 1:** Write multi-stage `Dockerfile` for React.
+- [x] **Commit 2:** Create `nginx.conf` for serving static files and React Router fallback.
+- [x] **Commit 3:** Build frontend image.
+- [x] **Commit 4:** Verify frontend runs and can access backend API.
+- [x] **Commit 5:** Document frontend Docker setup.
 
 ### Day 25: The Ultimate Docker Compose
 - [ ] **Daytime Learning:** Docker Compose networking and volumes.
