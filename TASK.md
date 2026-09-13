@@ -238,13 +238,13 @@
 - [x] **Commit 5:** Document frontend Docker setup.
 
 ### Day 25: The Ultimate Docker Compose
-- [ ] **Daytime Learning:** Docker Compose networking and volumes.
-- [ ] **Nighttime Doc:** Write down key concepts learned today.
-- [ ] **Commit 1:** Create `docker-compose.yml`.
-- [ ] **Commit 2:** Add Postgres and Redis services.
-- [ ] **Commit 3:** Add Web, Celery, and Celery Beat services.
-- [ ] **Commit 4:** Set up `.env` file handling and named volumes for DB persistence.
-- [ ] **Commit 5:** Run full stack with `docker-compose up` and fix issues.
+- [x] **Daytime Learning:** Docker Compose networking and volumes.
+- [x] **Nighttime Doc:** Write down key concepts learned today.
+- [x] **Commit 1:** Create `docker-compose.yml`.
+- [x] **Commit 2:** Add Postgres and Redis services.
+- [x] **Commit 3:** Add Web, Celery, and Celery Beat services.
+- [x] **Commit 4:** Set up `.env` file handling and named volumes for DB persistence.
+- [x] **Commit 5:** Run full stack with `docker-compose up` and fix issues.
 
 ### Day 26: CI/CD Pipeline (GitHub Actions)
 - [ ] **Daytime Learning:** Continuous Integration (CI), GitHub Actions.
