@@ -67,3 +67,25 @@ npm run test:watch
 ```
 Powered by Vitest, jsdom, and React Testing Library.
 
+---
+
+## 🐳 Docker Containerization
+
+The frontend is packaged as a multi-stage Docker build with Nginx:
+
+### Standalone Build
+```bash
+docker build -t pulseguard-frontend:latest ./frontend
+```
+
+### Standalone Run
+```bash
+docker run -d --name pulseguard_frontend -p 80:80 pulseguard-frontend:latest
+```
+
+The Nginx configuration automatically handles:
+- Client-side SPA routing fallbacks (`/monitors/:id`, `/settings`)
+- Reverse proxying `/api/` calls to the Django backend upstream
+- Brotli / Gzip compression for all static JS and CSS chunks
+
+
