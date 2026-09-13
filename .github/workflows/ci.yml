@@ -1,0 +1,107 @@
+name: PulseGuard CI Pipeline
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  backend-ci:
+    name: Backend Tests & Quality
+    runs-on: ubuntu-latest
+    services:
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 5
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          version: "latest"
+          enable-cache: true
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version-file: "backend/pyproject.toml"
+
+      - name: Install dependencies
+        working-directory: ./backend
+        run: uv sync --frozen
+
+      - name: Run Ruff Lint Check
+        working-directory: ./backend/config
+        run: uv run ruff check .
+
+      - name: Run Ruff Format Check
+        working-directory: ./backend/config
+        run: uv run ruff format --check .
+
+      - name: Run Django System Check
+        working-directory: ./backend/config
+        env:
+          SECRET_KEY: "test-secret-key-for-ci"
+          CELERY_BROKER_URL: "redis://localhost:6379/0"
+          CELERY_RESULT_BACKEND: "redis://localhost:6379/0"
+        run: uv run python manage.py check
+
+      - name: Run Pytest Test Suite with Coverage
+        working-directory: ./backend
+        env:
+          SECRET_KEY: "test-secret-key-for-ci"
+          CELERY_BROKER_URL: "redis://localhost:6379/0"
+          CELERY_RESULT_BACKEND: "redis://localhost:6379/0"
+        run: uv run pytest
+
+  frontend-ci:
+    name: Frontend Tests & Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: "npm"
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        working-directory: ./frontend
+        run: npm ci
+
+      - name: Run ESLint
+        working-directory: ./frontend
+        run: npm run lint
+
+      - name: Run Vitest Unit Tests
+        working-directory: ./frontend
+        run: npm test
+
+      - name: Typecheck and Build Production Bundle
+        working-directory: ./frontend
+        run: npm run build
+
+  docker-ci:
+    name: Docker Compose Validation
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Validate Docker Compose Configuration
+        run: docker compose config
