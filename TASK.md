@@ -265,10 +265,11 @@
 - [x] **Commit 5:** Final code review and cleanup.
 
 ### Day 28: Launch & Documentation
-- [ ] **Daytime Learning:** How to write a great open-source README.
-- [ ] **Nighttime Doc:** Write down key concepts learned today.
-- [ ] **Commit 1:** Write comprehensive project description in README.
-- [ ] **Commit 2:** Add setup and running instructions.
-- [ ] **Commit 3:** Add screenshots or GIF of the app.
-- [ ] **Commit 4:** Final manual QA testing of the app.
-- [ ] **Commit 5:** Tag version 1.0.0 and celebrate!
+- [x] **Daytime Learning:** How to write a great open-source README.
+- [x] **Nighttime Doc:** Write down key concepts learned today.
+- [x] **Commit 1:** Write comprehensive project description in README.
+- [x] **Commit 2:** Add setup and running instructions.
+- [x] **Commit 3:** Add screenshots or GIF of the app.
+- [x] **Commit 4:** Final manual QA testing of the app.
+- [x] **Commit 5:** Tag version 1.0.0 and celebrate!
+

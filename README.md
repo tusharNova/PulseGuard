@@ -4,7 +4,7 @@
 
 ### **Your 24/7 Digital Watchdog. Never Let Downtime Catch You Off Guard.**
 
-PulseGuard is a self-hosted, open-source uptime monitoring platform built for everyone—developers, founders, creators, and teams. It constantly checks your websites, online stores, APIs, and side-projects, alerting you the second something goes down.
+PulseGuard is a production-ready, self-hosted, open-source uptime monitoring platform built for everyone—founders, creators, developers, and teams. It continuously monitors your websites, APIs, and microservices, measuring latency, charting SLAs, and dispatching instant alerts the second something goes down.
 
 [![Python](https://img.shields.io/badge/Python-3.12+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
 [![Django](https://img.shields.io/badge/Django-6.0-092E20?style=for-the-badge&logo=django&logoColor=white)](https://djangoproject.com)
@@ -12,9 +12,11 @@ PulseGuard is a self-hosted, open-source uptime monitoring platform built for ev
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.8-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://typescriptlang.org)
 [![TailwindCSS](https://img.shields.io/badge/TailwindCSS-v4-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com)
 [![Celery](https://img.shields.io/badge/Celery-5.6-37814A?style=for-the-badge&logo=celery&logoColor=white)](https://docs.celeryq.dev/)
+[![Docker](https://img.shields.io/badge/Docker-Enabled-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://docker.com)
+[![Tests](https://img.shields.io/badge/Tests-45%20Passed%20(96%25%20Coverage)-brightgreen?style=for-the-badge)](docs/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](LICENSE)
 
-[**Get Started in 3 Minutes**](#-quick-start-up-and-running-in-3-minutes) • [**How It Works**](#-how-it-works-the-simple-version) • [**Features**](#-what-can-pulseguard-do) • [**API Specs**](docs/)
+[**1-Minute Docker Launch**](#-quick-start-1-the-docker-way-recommended) • [**How It Works**](#-how-it-works) • [**Features**](#-what-can-pulseguard-do) • [**Architecture**](#-architecture-overview) • [**API Docs**](docs/)
 
 </div>
 
@@ -24,15 +26,16 @@ PulseGuard is a self-hosted, open-source uptime monitoring platform built for ev
 
 > *"You wouldn't run a physical store without locking the front door. Why run a website without knowing if it's open?"*
 
-Every minute of downtime hurts your reputation, drains revenue, and frustrates users. Expensive commercial tools charge heavy monthly fees for basic ping checks.
+Every minute of downtime damages your reputation, hurts customer trust, and bleeds revenue. Commercial uptime tools charge aggressive monthly fees for basic ping checks and gatekeep your historical telemetry.
 
-**PulseGuard is free, open-source, and self-hosted.** You own your data, you run your checks, and you keep total control.
+**PulseGuard is free, open-source, and self-hosted.**
+- You own 100% of your telemetry data.
+- Run as many monitors as you need without tier limits.
+- Zero vendor lock-in with clean Docker Compose orchestration.
 
 ---
 
-## ⚙️ How It Works (The Simple Version)
-
-You don't need a computer science degree to understand how PulseGuard protects your site:
+## ⚙️ How It Works
 
 ```
  ┌────────────────┐         ┌───────────────────────────┐         ┌─────────────────┐
@@ -41,136 +44,176 @@ You don't need a computer science degree to understand how PulseGuard protects y
  │ (e.g. mysite)  │         │ (Sends a lightweight ping)│         │ (Live Dashboard)│
  └────────────────┘         └─────────────┬─────────────┘         └─────────────────┘
                                           │
-                                          ▼
-                             ┌─────────────────────────┐
-                             │ Is it fast? Is it UP?   │
-                             │ ✅ 200 OK (85ms latency)│
-                             │ ❌ 500 Error / Timeout  │
-                             └─────────────────────────┘
+                     ┌────────────────────┴────────────────────┐
+                     ▼                                         ▼
+         ✅ Healthy (200 OK, 85ms)                🚨 Server Down (500 / Timeout)
+         - Renders green status block             - Renders red downtime block
+         - Updates 24h SLA uptime %               - Logs incident with error reason
+         - Auto-resolves past issues              - Sends instant Alert Email!
 ```
 
-1. **You Add a Monitor:** Type in the URL you want to track (e.g., `https://myshop.com` or `https://api.myproject.io`).
-2. **PulseGuard Pings It Every 60 Seconds:** In the background, our worker bots send an HTTP request to your site. They measure how many milliseconds it took to answer and check whether the server responded with a healthy code (`200 OK`).
-3. **Smart Error Detection:** If your server crashes, runs out of memory, or has a DNS failure, PulseGuard catches it instantly and marks it as downtime with the exact error cause.
-4. **Clean Dashboard:** Log into your dashboard anytime to see live uptime percentages (e.g., `99.98%`), response latency graphs, and historical logs.
+1. **Add Your URL:** Register your website, e-commerce store, or JSON API endpoint in the dashboard.
+2. **Automated Celery Beat Scheduler:** Every 60 seconds, asynchronous workers dispatch non-blocking HTTP health probes.
+3. **Response & Latency Telemetry:** PulseGuard records the exact response time (ms), HTTP status code, and error trace.
+4. **State Transition Alerts:** When a monitor switches from `UP` ➡️ `DOWN`, an incident is recorded and an email alert is sent immediately. When it recovers (`DOWN` ➡️ `UP`), a resolution notification is sent automatically.
 
 ---
 
 ## ✨ What Can PulseGuard Do?
 
-| Feature | What It Does For You |
+| Feature | Description |
 | :--- | :--- |
-| ⏱️ **60-Second Health Pings** | Continuous background checks keep your finger on the pulse of your servers. |
-| ⚡ **Sub-Millisecond Latency** | Measures server response times so you can detect slowdowns before users complain. |
-| 🛡️ **Zero False Alarms** | Distinguishes between network timeouts, SSL certificate expirations, and true 500 crashes. |
-| 📊 **24-Hour Uptime Math** | Automatically calculates your SLA uptime percentage (e.g., `100%`, `99.9%`). |
-| 👥 **Multi-Tenant & Secure** | Built with bank-grade JWT authentication. Your monitors and history are private to you. |
-| 📱 **Beautiful Modern UI** | Sleek dark-mode interface built with React 19 and TailwindCSS that looks great on desktop and mobile. |
+| ⏱️ **60-Second Automated Pings** | Continuous background health checks ensure you detect outages before your users do. |
+| 📊 **GitHub-Style Status Bars** | Visual 30-day green and red block status bar showing check history with interactive hover details. |
+| 📈 **Interactive Response Charts** | High-resolution latency time-series graphs powered by Recharts with custom tooltips. |
+| 🚨 **Incident & Recovery Alerts** | State-transition detection with instant email alerts on downtime and automatic recovery notifications. |
+| ⚙️ **User Alert Preferences** | Toggle email alerts on or off per account from the Settings page. |
+| 🛡️ **Tenant Privacy & JWT Auth** | Multi-tenant database isolation. Only you can view, edit, or delete your own monitors. |
+| ⚡ **Sub-Millisecond Queries** | Optimized database composite indexes with `Prefetch` to eliminate N+1 query overhead. |
+| 🐳 **Single-Command Docker Stack** | Complete 6-service orchestration: PostgreSQL 16, Redis 7, Django Gunicorn, Celery Worker, Celery Beat, and Nginx. |
+| 🔄 **Automated CI/CD** | GitHub Actions pipeline running Pytest, coverage reports, ESLint, and Vitest on every commit. |
 
 ---
 
-## 🚀 Quick Start: Up and Running in 3 Minutes
+## 🏗️ Architecture Overview
 
-Follow these simple steps to run PulseGuard on your computer.
-
-### Step 0: What You Need
-* [Python 3.12+](https://www.python.org/downloads/)
-* [uv](https://docs.astral.sh/uv/getting-started/installation/) *(A lightning-fast Python manager — installed with 1 command)*:
-  * **Windows (PowerShell):** `powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"`
-  * **Mac / Linux:** `curl -LsSf https://astral.sh/uv/install.sh | sh`
-* [Node.js 20+](https://nodejs.org/)
-* [Docker Desktop](https://www.docker.com/products/docker-desktop/) *(Used to run the Redis task queue)*
+```
+                      [ Internet / User Browser ]
+                                   │
+                                   ▼
+                      ┌─────────────────────────┐
+                      │    Nginx Reverse Proxy  │ (Port 80)
+                      │ (Serves React 19 SPA)   │
+                      └────────────┬────────────┘
+                                   │
+                     Proxy /api/ & /admin/
+                                   │
+                                   ▼
+                      ┌─────────────────────────┐
+                      │   Django Gunicorn WSGI  │ (Port 8000)
+                      │  (REST API + Auth)      │
+                      └────────────┬────────────┘
+                                   │
+           ┌───────────────────────┼───────────────────────┐
+           ▼                       ▼                       ▼
+┌────────────────────┐   ┌───────────────────┐   ┌───────────────────┐
+│   PostgreSQL 16    │   │   Redis 7 Cache   │   │   Celery Worker   │
+│ (Persistent DB)    │   │ (Message Broker)  │   │   & Celery Beat   │
+└────────────────────┘   └───────────────────┘   └───────────────────┘
+```
 
 ---
 
-### Step 1: Clone the Repo
+## 🚀 Quick Start #1: The Docker Way (Recommended)
+
+The easiest way to run PulseGuard in production or locally:
+
+### 1. Clone the repository:
 ```bash
 git clone https://github.com/tusharNova/PulseGuard.git
 cd PulseGuard
 ```
 
+### 2. Copy the environment configuration:
+```bash
+cp .env.example .env
+```
+
+### 3. Launch the full 6-service stack:
+```bash
+docker compose up --build -d
+```
+
+### 4. Access the application:
+* 🌐 **Web Dashboard:** Open [http://localhost](http://localhost) in your browser.
+* 🛠️ **Django Admin:** Open [http://localhost/admin/](http://localhost/admin/) to manage backend models.
+* 📋 **View Logs:** `docker compose logs -f`
+
 ---
 
-### Step 2: Start the Background Queue (Redis)
-In your terminal, run:
+## 💻 Quick Start #2: Local Development
+
+For developers who want to run frontend and backend independently with hot-reloading:
+
+### Prerequisites
+* [Python 3.12+](https://python.org)
+* [uv](https://docs.astral.sh/uv/) (`curl -LsSf https://astral.sh/uv/install.sh | sh` or via PowerShell on Windows)
+* [Node.js 22+](https://nodejs.org)
+* Docker (for Redis message broker)
+
+### 1. Start Redis
 ```bash
 docker compose up -d redis
 ```
-*(That's it! Redis is now running in the background).*
 
----
-
-### Step 3: Start the Backend API & Workers
-
-Open **Terminal 1** (Backend API):
+### 2. Start the Backend & Celery Workers
 ```bash
 cd backend/config
+
+# Run database migrations
 uv run python manage.py migrate
+
+# Start development API server (Terminal 1)
 uv run python manage.py runserver
-```
-👉 *Your API is now running at `http://127.0.0.1:8000/`*
 
-Open **Terminal 2** (Pinger Worker):
-```bash
-cd backend/config
-# On Windows:
-uv run celery -A config worker -l info -P solo
-
-# On Mac / Linux:
+# Start Celery Worker (Terminal 2)
+# On Windows: uv run celery -A config worker -l info -P solo
+# On Linux/macOS: uv run celery -A config worker -l info
 uv run celery -A config worker -l info
-```
 
-Open **Terminal 3** (Periodic 60s Scheduler):
-```bash
-cd backend/config
+# Start Celery Beat Scheduler (Terminal 3)
 uv run celery -A config beat -l info
 ```
 
----
-
-### Step 4: Start the Frontend UI
-
-Open **Terminal 4** (Frontend):
+### 3. Start the React Frontend
 ```bash
 cd frontend
+
 npm install
 npm run dev
 ```
-👉 *Open **http://localhost:5173/** in your browser and enjoy your live PulseGuard dashboard!*
+Open [http://localhost:5173](http://localhost:5173) in your browser!
 
 ---
 
-## 🧪 Testing & Code Quality
+## 🧪 Automated Testing & Quality Assurance
 
-We take reliability seriously. PulseGuard includes an automated test suite covering authentication, tenant privacy, pinger resilience, and periodic scheduling.
+PulseGuard is rigorously tested across the entire stack:
 
-Run the tests anytime with one command:
 ```bash
-cd backend/config
-uv run python manage.py test
+# Run Backend Pytest Suite with Coverage (35 Tests, 96% Coverage)
+cd backend
+uv run pytest
+
+# Run Frontend Vitest Suite (10 Tests)
+cd frontend
+npm test
+
+# Typecheck and Bundle Build
+npm run build
 ```
-✅ **28 out of 28 tests passing with 100% coverage.**
 
 ---
 
-## 📚 Technical & API Documentation
+## 📚 API Specifications & Documentation
 
-For engineers who want to build integrations, webhooks, or mobile apps on top of PulseGuard:
-
-* 🔐 [**Authentication API Spec**](docs/auth_api.md) — Register, Login, Token Refresh, User Profiles.
-* 📡 [**Monitoring API Spec**](docs/monitoring_api.md) — Create Monitors, Retrieve Checks, 24h Stats, and History.
-* 📋 [**28-Day Development Sprint Log**](TASK.md) — Day-by-day roadmap and git commits.
+* 🔐 [Authentication API Specification](docs/auth_api.md) — Registration, JWT login, token refresh, user profile settings.
+* 📡 [Monitoring API Specification](docs/monitoring_api.md) — Monitor CRUD, check results, SLA uptime aggregation, and alerts.
+* 📋 [28-Day Development Challenge Sprint Log](TASK.md) — Detailed milestones and commits from Day 1 to Day 28.
 
 ---
 
-## 🤝 Contributing & Community
+## 🤝 Contributing
 
-PulseGuard is completely open-source! We welcome:
-* 🐛 Bug reports & feature requests via [GitHub Issues](../../issues).
-* 💡 Pull requests for new notification channels (Slack, Discord, Email, Webhooks, Telegram).
-* ⭐ Giving the repository a Star if this project helped you!
+We welcome contributions from developers of all skill levels!
+1. Fork the project.
+2. Create your feature branch (`git checkout -b feat/my-new-feature`).
+3. Commit your changes (`git commit -m "feat: add webhook notification channel"`).
+4. Push to the branch (`git push origin feat/my-new-feature`).
+5. Open a Pull Request!
 
 ---
 
 ## 📄 License
-Released under the permissive **[MIT License](LICENSE)**. Feel free to use, modify, and deploy for personal or commercial projects.
+
+PulseGuard is open-source software licensed under the **[MIT License](LICENSE)**. Free for personal, educational, and commercial use.
