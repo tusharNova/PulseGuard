@@ -256,13 +256,13 @@
 - [x] **Commit 5:** Verify GitHub Actions run successfully.
 
 ### Day 27: Security & Polish
-- [ ] **Daytime Learning:** CORS, Web security basics.
-- [ ] **Nighttime Doc:** Write down key concepts learned today.
-- [ ] **Commit 1:** Configure proper CORS settings in Django.
-- [ ] **Commit 2:** Ensure `DEBUG=False` and secure settings for production.
-- [ ] **Commit 3:** Remove any hardcoded secrets from code.
-- [ ] **Commit 4:** Add basic logging configuration to Django.
-- [ ] **Commit 5:** Final code review and cleanup.
+- [x] **Daytime Learning:** CORS, Web security basics.
+- [x] **Nighttime Doc:** Write down key concepts learned today.
+- [x] **Commit 1:** Configure proper CORS settings in Django.
+- [x] **Commit 2:** Ensure `DEBUG=False` and secure settings for production.
+- [x] **Commit 3:** Remove any hardcoded secrets from code.
+- [x] **Commit 4:** Add basic logging configuration to Django.
+- [x] **Commit 5:** Final code review and cleanup.
 
 ### Day 28: Launch & Documentation
 - [ ] **Daytime Learning:** How to write a great open-source README.
