@@ -11,6 +11,7 @@ def send_monitor_down_alert(monitor, alert) -> bool:
     """
     user_email = monitor.user.email
     if not user_email or not getattr(monitor.user, "email_alerts_enabled", True):
+        logger.debug(f"Skipping DOWN alert email for monitor {monitor.id}: email not set or alerts disabled")
         return False
 
     subject = f"🚨 [DOWN ALERT] {monitor.name} is unreachable"
@@ -47,6 +48,7 @@ def send_monitor_up_alert(monitor, alert) -> bool:
     """
     user_email = monitor.user.email
     if not user_email or not getattr(monitor.user, "email_alerts_enabled", True):
+        logger.debug(f"Skipping UP recovery email for monitor {monitor.id}: email not set or alerts disabled")
         return False
 
     subject = f"✅ [RECOVERED] {monitor.name} is back online"

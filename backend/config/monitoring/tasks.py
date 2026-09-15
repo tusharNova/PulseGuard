@@ -1,8 +1,11 @@
+import logging
 import time
 import requests
 from celery import shared_task
 from .models import Alert, CheckResult, Monitor
 from .notifications import send_monitor_down_alert, send_monitor_up_alert
+
+logger = logging.getLogger("monitoring")
 
 
 @shared_task(bind=True, max_retries=1)
@@ -15,9 +18,11 @@ def ping_monitor_task(self, monitor_id):
     try:
         monitor = Monitor.objects.get(id=monitor_id)
     except Monitor.DoesNotExist:
+        logger.warning(f"ping_monitor_task skipped: Monitor {monitor_id} not found")
         return {"error": f"Monitor {monitor_id} not found"}
 
     if not monitor.is_active:
+        logger.debug(f"ping_monitor_task skipped: Monitor {monitor_id} is inactive")
         return {"status": "skipped", "reason": "monitor is inactive"}
 
     url = monitor.url
@@ -25,6 +30,8 @@ def ping_monitor_task(self, monitor_id):
     response_time_ms = None
     is_up = False
     error_message = ""
+
+    logger.info(f"Checking monitor '{monitor.name}' (ID: {monitor.id}, URL: {url})")
 
     start_time = time.perf_counter()
     try:
@@ -40,24 +47,35 @@ def ping_monitor_task(self, monitor_id):
 
         if not is_up:
             error_message = f"HTTP status code {status_code}"
+            logger.warning(
+                f"Monitor '{monitor.name}' returned non-success HTTP status {status_code} ({response_time_ms}ms)"
+            )
+        else:
+            logger.info(
+                f"Monitor '{monitor.name}' is UP (status: {status_code}, latency: {response_time_ms}ms)"
+            )
 
     except requests.exceptions.Timeout:
         elapsed = time.perf_counter() - start_time
         response_time_ms = round(elapsed * 1000, 2)
         is_up = False
         error_message = "Request timed out (exceeded 10 seconds)"
+        logger.warning(f"Monitor '{monitor.name}' timed out after {response_time_ms}ms")
 
     except requests.exceptions.SSLError as e:
         is_up = False
         error_message = f"SSL verification failed: {str(e)}"
+        logger.warning(f"Monitor '{monitor.name}' SSL verification failed: {e}")
 
     except requests.exceptions.ConnectionError as e:
         is_up = False
         error_message = f"Connection failed (DNS failure or unreachable host): {str(e)}"
+        logger.warning(f"Monitor '{monitor.name}' connection failed: {e}")
 
     except requests.exceptions.RequestException as e:
         is_up = False
         error_message = f"Request error: {str(e)}"
+        logger.warning(f"Monitor '{monitor.name}' request exception: {e}")
 
     # Detect state transition (UP -> DOWN or DOWN -> UP) before recording new check
     last_check = monitor.check_results.first()
@@ -72,6 +90,9 @@ def ping_monitor_task(self, monitor_id):
                 message=f"Monitor '{monitor.name}' ({monitor.url}) has gone DOWN: {error_message or 'Service unavailable'}",
             )
             alert_created = str(alert.id)
+            logger.warning(
+                f"State transition: Monitor '{monitor.name}' transitioned UP -> DOWN. Created alert {alert.id}"
+            )
             send_monitor_down_alert(monitor, alert)
         elif not last_check.is_up and is_up:
             # Transition: DOWN -> UP (Recovery)
@@ -85,6 +106,9 @@ def ping_monitor_task(self, monitor_id):
                 alert_type=Alert.AlertType.DOWN, is_resolved=False
             ).update(is_resolved=True)
             alert_created = str(alert.id)
+            logger.info(
+                f"State transition: Monitor '{monitor.name}' RECOVERED. Created alert {alert.id}"
+            )
             send_monitor_up_alert(monitor, alert)
 
     # Record the health check result
@@ -117,7 +141,9 @@ def dispatch_active_monitors_task():
     monitor_ids = list(
         Monitor.objects.filter(is_active=True).values_list("id", flat=True)
     )
+    logger.info(f"Celery Beat: Dispatching health checks for {len(monitor_ids)} active monitor(s)")
     for monitor_id in monitor_ids:
         ping_monitor_task.delay(str(monitor_id))
 
     return {"dispatched": len(monitor_ids)}
+

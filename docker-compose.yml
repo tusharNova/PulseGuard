@@ -58,6 +58,7 @@ services:
         condition: service_healthy
     volumes:
       - static_data:/app/config/staticfiles
+      - logs_data:/app/config/logs
     restart: unless-stopped
 
   celery_worker:
@@ -84,6 +85,8 @@ services:
         condition: service_healthy
       backend:
         condition: service_started
+    volumes:
+      - logs_data:/app/config/logs
     restart: unless-stopped
 
   celery_beat:
@@ -110,6 +113,8 @@ services:
         condition: service_healthy
       backend:
         condition: service_started
+    volumes:
+      - logs_data:/app/config/logs
     restart: unless-stopped
 
   frontend:
@@ -128,3 +133,4 @@ volumes:
   postgres_data:
   redis_data:
   static_data:
+  logs_data:

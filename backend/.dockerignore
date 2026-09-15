@@ -8,5 +8,7 @@ __pycache__/
 htmlcov/
 *.sqlite3
 staticfiles/
+logs/
+*.log
 .git
 .gitignore

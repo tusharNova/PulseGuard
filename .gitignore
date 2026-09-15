@@ -24,6 +24,8 @@ Thumbs.db
 
 # Logs
 *.log
+logs/
+backend/config/logs/
 
 # Python cache
 .pytest_cache/

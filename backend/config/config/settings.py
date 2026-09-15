@@ -218,7 +218,10 @@ if not DEBUG:
     )
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
-# Structured Console Logging
+# Persistent & Rotating Logging Configuration
+LOGS_DIR = BASE_DIR / "logs"
+LOGS_DIR.mkdir(parents=True, exist_ok=True)
+
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
@@ -234,21 +237,59 @@ LOGGING = {
             "class": "logging.StreamHandler",
             "formatter": "standard",
         },
+        "file_django": {
+            "level": "INFO",
+            "class": "logging.handlers.RotatingFileHandler",
+            "filename": str(LOGS_DIR / "django.log"),
+            "maxBytes": 10 * 1024 * 1024,  # 10 MB
+            "backupCount": 5,
+            "formatter": "standard",
+            "encoding": "utf-8",
+        },
+        "file_celery": {
+            "level": "INFO",
+            "class": "logging.handlers.RotatingFileHandler",
+            "filename": str(LOGS_DIR / "celery.log"),
+            "maxBytes": 10 * 1024 * 1024,  # 10 MB
+            "backupCount": 5,
+            "formatter": "standard",
+            "encoding": "utf-8",
+        },
+        "file_error": {
+            "level": "ERROR",
+            "class": "logging.handlers.RotatingFileHandler",
+            "filename": str(LOGS_DIR / "error.log"),
+            "maxBytes": 10 * 1024 * 1024,  # 10 MB
+            "backupCount": 5,
+            "formatter": "standard",
+            "encoding": "utf-8",
+        },
     },
     "root": {
-        "handlers": ["console"],
+        "handlers": ["console", "file_django", "file_error"],
         "level": "INFO",
     },
     "loggers": {
         "django": {
-            "handlers": ["console"],
+            "handlers": ["console", "file_django", "file_error"],
+            "level": "INFO",
+            "propagate": False,
+        },
+        "django.request": {
+            "handlers": ["console", "file_django", "file_error"],
+            "level": "ERROR",
+            "propagate": False,
+        },
+        "celery": {
+            "handlers": ["console", "file_celery", "file_error"],
             "level": "INFO",
             "propagate": False,
         },
         "monitoring": {
-            "handlers": ["console"],
+            "handlers": ["console", "file_celery", "file_error"],
             "level": "INFO",
             "propagate": False,
         },
     },
 }
+

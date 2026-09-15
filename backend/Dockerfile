@@ -41,7 +41,7 @@ RUN sed -i 's/\r$//' docker-entrypoint.sh && chmod +x docker-entrypoint.sh
 
 # Create non-root unprivileged user for security
 RUN groupadd -r pulseguard && useradd -r -g pulseguard -d /app -s /sbin/nologin pulseguard && \
-    mkdir -p /app/config/staticfiles && \
+    mkdir -p /app/config/staticfiles /app/config/logs && \
     chown -R pulseguard:pulseguard /app
 
 USER pulseguard
