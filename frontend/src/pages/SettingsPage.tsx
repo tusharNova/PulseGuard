@@ -72,20 +72,20 @@ export const SettingsPage: React.FC = () => {
       {/* Breadcrumb Navigation */}
       <Link
         to="/dashboard"
-        className="inline-flex items-center space-x-2 text-xs font-semibold uppercase tracking-wider text-slate-400 hover:text-emerald-400 transition mb-6"
+        className="inline-flex items-center space-x-2 text-xs font-semibold uppercase tracking-wider text-neutral-400 hover:text-emerald-400 transition mb-6"
       >
         <ArrowLeft className="h-4 w-4" />
         <span>Back to Dashboard</span>
       </Link>
 
-      <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-8 sm:p-10 shadow-xl backdrop-blur-sm">
-        <div className="flex items-center space-x-3 mb-8 pb-6 border-b border-slate-800">
+      <div className="rounded-2xl border border-neutral-800 bg-neutral-900/60 p-8 sm:p-10 shadow-xl backdrop-blur-sm">
+        <div className="flex items-center space-x-3 mb-8 pb-6 border-b border-neutral-800">
           <div className="h-11 w-11 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
             <UserIcon className="h-6 w-6" />
           </div>
           <div>
             <h1 className="text-xl sm:text-2xl font-bold text-white tracking-tight">Account & Alert Settings</h1>
-            <p className="text-slate-400 text-xs sm:text-sm mt-0.5">
+            <p className="text-neutral-400 text-xs sm:text-sm mt-0.5">
               Manage your personal information and downtime email notification preferences
             </p>
           </div>
@@ -94,19 +94,19 @@ export const SettingsPage: React.FC = () => {
         <form onSubmit={handleSave} className="space-y-6">
           {/* Email (Read-Only) */}
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-2">
+            <label className="block text-xs font-semibold uppercase tracking-wider text-neutral-300 mb-2">
               Email Address
             </label>
             <div className="relative">
-              <Mail className="absolute left-3.5 top-3 h-5 w-5 text-slate-500" />
+              <Mail className="absolute left-3.5 top-3 h-5 w-5 text-neutral-500" />
               <input
                 type="email"
                 disabled
                 value={user?.email || ""}
-                className="w-full bg-slate-950/60 border border-slate-800/80 rounded-xl px-4 py-2.5 pl-11 text-slate-400 text-sm cursor-not-allowed font-mono"
+                className="w-full bg-neutral-950/60 border border-neutral-800/80 rounded-xl px-4 py-2.5 pl-11 text-neutral-400 text-sm cursor-not-allowed font-mono"
               />
             </div>
-            <p className="mt-1.5 text-xs text-slate-500">
+            <p className="mt-1.5 text-xs text-neutral-500">
               Primary email used for sign-in and incident dispatch.
             </p>
           </div>
@@ -114,7 +114,7 @@ export const SettingsPage: React.FC = () => {
           {/* Name Fields */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-2">
+              <label className="block text-xs font-semibold uppercase tracking-wider text-neutral-300 mb-2">
                 First Name
               </label>
               <input
@@ -122,11 +122,11 @@ export const SettingsPage: React.FC = () => {
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
                 placeholder="Jane"
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-emerald-500 transition"
+                className="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-4 py-2.5 text-white placeholder-neutral-500 text-sm focus:outline-none focus:border-emerald-500 transition"
               />
             </div>
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-2">
+              <label className="block text-xs font-semibold uppercase tracking-wider text-neutral-300 mb-2">
                 Last Name
               </label>
               <input
@@ -134,22 +134,22 @@ export const SettingsPage: React.FC = () => {
                 value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
                 placeholder="Doe"
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-emerald-500 transition"
+                className="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-4 py-2.5 text-white placeholder-neutral-500 text-sm focus:outline-none focus:border-emerald-500 transition"
               />
             </div>
           </div>
 
           {/* Alert Preferences Toggle */}
-          <div className="pt-4 border-t border-slate-800">
+          <div className="pt-4 border-t border-neutral-800">
             <h3 className="text-sm font-semibold text-white mb-3 flex items-center space-x-2">
               <Bell className="h-4 w-4 text-emerald-400" />
               <span>Notification Preferences</span>
             </h3>
 
-            <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between">
+            <div className="p-4 rounded-xl bg-neutral-950 border border-neutral-800 flex items-center justify-between">
               <div>
                 <span className="text-sm font-semibold text-white">Email Incident & Recovery Alerts</span>
-                <p className="text-xs text-slate-400 mt-0.5 max-w-md">
+                <p className="text-xs text-neutral-400 mt-0.5 max-w-md">
                   Receive real-time email notifications whenever any of your active monitors go DOWN or RECOVER back to healthy status.
                 </p>
               </div>
@@ -160,17 +160,17 @@ export const SettingsPage: React.FC = () => {
                   onChange={(e) => setEmailAlertsEnabled(e.target.checked)}
                   className="sr-only peer"
                 />
-                <div className="w-11 h-6 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-500" />
+                <div className="w-11 h-6 bg-neutral-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-500" />
               </label>
             </div>
           </div>
 
           {/* Save Button */}
-          <div className="flex items-center justify-end space-x-3 pt-6 border-t border-slate-800">
+          <div className="flex items-center justify-end space-x-3 pt-6 border-t border-neutral-800">
             <button
               type="submit"
               disabled={isSaving}
-              className="px-6 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 disabled:opacity-50 text-slate-950 font-bold text-sm shadow-lg shadow-emerald-500/20 transition cursor-pointer flex items-center space-x-2"
+              className="px-6 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 disabled:opacity-50 text-neutral-950 font-bold text-sm shadow-lg shadow-emerald-500/20 transition cursor-pointer flex items-center space-x-2"
             >
               {isSaving ? (
                 <>

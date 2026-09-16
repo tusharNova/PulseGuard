@@ -17,7 +17,7 @@ interface LatencyChartProps {
 export const LatencyChart: React.FC<LatencyChartProps> = ({ data }) => {
   if (!data || data.length === 0) {
     return (
-      <div className="h-64 flex items-center justify-center text-slate-500 text-sm">
+      <div className="h-64 flex items-center justify-center text-neutral-500 text-sm">
         No ping data recorded yet to render latency chart.
       </div>
     );
@@ -71,8 +71,8 @@ export const LatencyChart: React.FC<LatencyChartProps> = ({ data }) => {
               if (active && payload && payload.length) {
                 const item = payload[0].payload;
                 return (
-                  <div className="p-3 bg-slate-900 border border-slate-800 rounded-xl shadow-xl text-xs space-y-1 backdrop-blur-md">
-                    <p className="text-slate-400 font-sans">{item.fullDate}</p>
+                  <div className="p-3 bg-neutral-900 border border-neutral-800 rounded-xl shadow-xl text-xs space-y-1 backdrop-blur-md">
+                    <p className="text-neutral-400 font-sans">{item.fullDate}</p>
                     <div className="flex items-center space-x-2">
                       <span className="text-white font-bold text-sm">{item.latency} ms</span>
                       <span

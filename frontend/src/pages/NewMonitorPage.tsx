@@ -37,14 +37,14 @@ export const NewMonitorPage: React.FC = () => {
       {/* Navigation Breadcrumb */}
       <Link
         to="/dashboard"
-        className="inline-flex items-center space-x-2 text-xs font-semibold uppercase tracking-wider text-slate-400 hover:text-emerald-400 transition mb-6"
+        className="inline-flex items-center space-x-2 text-xs font-semibold uppercase tracking-wider text-neutral-400 hover:text-emerald-400 transition mb-6"
       >
         <ArrowLeft className="h-4 w-4" />
         <span>Back to Dashboard</span>
       </Link>
 
-      <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-8 sm:p-10 shadow-xl backdrop-blur-sm">
-        <div className="flex items-center space-x-3 mb-8 pb-6 border-b border-slate-800">
+      <div className="rounded-2xl border border-neutral-800 bg-neutral-900/60 p-8 sm:p-10 shadow-xl backdrop-blur-sm">
+        <div className="flex items-center space-x-3 mb-8 pb-6 border-b border-neutral-800">
           <div className="h-11 w-11 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
             <PlusCircle className="h-6 w-6" />
           </div>
@@ -52,7 +52,7 @@ export const NewMonitorPage: React.FC = () => {
             <h1 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
               Create New Monitor
             </h1>
-            <p className="text-slate-400 text-xs sm:text-sm mt-0.5">
+            <p className="text-neutral-400 text-xs sm:text-sm mt-0.5">
               Set up automated background health checks for your website or API
             </p>
           </div>

@@ -2,6 +2,6 @@
 
 @layer base {
   body {
-    @apply bg-slate-950 text-slate-100 min-h-screen font-sans antialiased;
+    @apply bg-black text-neutral-100 min-h-screen font-sans antialiased;
   }
 }

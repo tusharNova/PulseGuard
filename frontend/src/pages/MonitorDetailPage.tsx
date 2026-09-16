@@ -114,7 +114,7 @@ export const MonitorDetailPage: React.FC = () => {
       <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center">
         <div className="flex flex-col items-center space-y-3">
           <Loader2 className="h-8 w-8 text-emerald-400 animate-spin" />
-          <span className="text-slate-400 text-sm">Loading monitor telemetry...</span>
+          <span className="text-neutral-400 text-sm">Loading monitor telemetry...</span>
         </div>
       </div>
     );
@@ -126,10 +126,10 @@ export const MonitorDetailPage: React.FC = () => {
         <div className="p-8 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-400 max-w-md mx-auto">
           <AlertCircle className="h-10 w-10 mx-auto mb-3" />
           <h2 className="text-lg font-bold text-white mb-1">Monitor Not Found</h2>
-          <p className="text-sm text-slate-400 mb-6">{error || "Unable to find the requested monitor."}</p>
+          <p className="text-sm text-neutral-400 mb-6">{error || "Unable to find the requested monitor."}</p>
           <Link
             to="/dashboard"
-            className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-sm font-semibold transition inline-flex items-center space-x-2"
+            className="px-4 py-2 rounded-xl bg-neutral-800 hover:bg-neutral-700 text-white text-sm font-semibold transition inline-flex items-center space-x-2"
           >
             <ArrowLeft className="h-4 w-4" />
             <span>Back to Dashboard</span>
@@ -147,7 +147,7 @@ export const MonitorDetailPage: React.FC = () => {
       <div className="flex items-center justify-between mb-6">
         <Link
           to="/dashboard"
-          className="inline-flex items-center space-x-2 text-xs font-semibold uppercase tracking-wider text-slate-400 hover:text-emerald-400 transition"
+          className="inline-flex items-center space-x-2 text-xs font-semibold uppercase tracking-wider text-neutral-400 hover:text-emerald-400 transition"
         >
           <ArrowLeft className="h-4 w-4" />
           <span>Dashboard</span>
@@ -157,7 +157,7 @@ export const MonitorDetailPage: React.FC = () => {
           <button
             onClick={() => fetchMonitorData(true)}
             disabled={isRefreshing}
-            className="p-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white border border-slate-800 transition cursor-pointer"
+            className="p-2 rounded-xl bg-neutral-900 hover:bg-neutral-800 text-neutral-400 hover:text-white border border-neutral-800 transition cursor-pointer"
             title="Refresh Telemetry"
           >
             <RefreshCw className={`h-4 w-4 ${isRefreshing ? "animate-spin text-emerald-400" : ""}`} />
@@ -188,7 +188,7 @@ export const MonitorDetailPage: React.FC = () => {
           <button
             onClick={handleDelete}
             disabled={isDeleting}
-            className="p-2 rounded-xl bg-slate-900 hover:bg-rose-500/10 text-slate-400 hover:text-rose-400 border border-slate-800 transition cursor-pointer"
+            className="p-2 rounded-xl bg-neutral-900 hover:bg-rose-500/10 text-neutral-400 hover:text-rose-400 border border-neutral-800 transition cursor-pointer"
             title="Delete Monitor"
           >
             {isDeleting ? <Loader2 className="h-4 w-4 animate-spin text-rose-400" /> : <Trash2 className="h-4 w-4" />}
@@ -197,7 +197,7 @@ export const MonitorDetailPage: React.FC = () => {
       </div>
 
       {/* Hero Header */}
-      <div className="p-6 sm:p-8 rounded-2xl bg-slate-900/60 border border-slate-800 shadow-xl backdrop-blur-sm mb-8">
+      <div className="p-6 sm:p-8 rounded-2xl bg-neutral-900/60 border border-neutral-800 shadow-xl backdrop-blur-sm mb-8">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <div className="flex items-center space-x-3 mb-2">
@@ -206,12 +206,12 @@ export const MonitorDetailPage: React.FC = () => {
                 className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${
                   monitor.is_active
                     ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
-                    : "bg-slate-800 text-slate-400 border border-slate-700"
+                    : "bg-neutral-800 text-neutral-400 border border-neutral-700"
                 }`}
               >
                 <span
                   className={`h-1.5 w-1.5 rounded-full mr-1.5 ${
-                    monitor.is_active ? "bg-emerald-400 animate-pulse" : "bg-slate-500"
+                    monitor.is_active ? "bg-emerald-400 animate-pulse" : "bg-neutral-500"
                   }`}
                 />
                 {monitor.is_active ? "Active" : "Paused"}
@@ -229,19 +229,19 @@ export const MonitorDetailPage: React.FC = () => {
           </div>
 
           <div className="flex items-center gap-3">
-            <div className="px-3.5 py-2 rounded-xl bg-slate-950 border border-slate-800 text-xs text-slate-400 flex items-center space-x-2">
-              <Clock className="h-3.5 w-3.5 text-slate-500" />
+            <div className="px-3.5 py-2 rounded-xl bg-neutral-950 border border-neutral-800 text-xs text-neutral-400 flex items-center space-x-2">
+              <Clock className="h-3.5 w-3.5 text-neutral-500" />
               <span>Interval: {monitor.interval}s</span>
             </div>
-            <div className="px-3.5 py-2 rounded-xl bg-slate-950 border border-slate-800 text-xs font-mono uppercase text-slate-400">
+            <div className="px-3.5 py-2 rounded-xl bg-neutral-950 border border-neutral-800 text-xs font-mono uppercase text-neutral-400">
               {monitor.monitor_type}
             </div>
           </div>
         </div>
 
         {/* Real-time Segmented Status Bar */}
-        <div className="mt-6 pt-5 border-t border-slate-800/80 w-full">
-          <div className="flex items-center justify-between text-xs text-slate-400 mb-2">
+        <div className="mt-6 pt-5 border-t border-neutral-800/80 w-full">
+          <div className="flex items-center justify-between text-xs text-neutral-400 mb-2">
             <span className="font-semibold text-white">Live Uptime Status (Last 45 Checks)</span>
             <span>{stats ? `${stats.uptime_percentage}% 24h SLA` : "100% Uptime"}</span>
           </div>
@@ -257,8 +257,8 @@ export const MonitorDetailPage: React.FC = () => {
       {/* KPI Telemetry Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-4 gap-5 mb-8">
         {/* Current State */}
-        <div className="p-5 rounded-xl bg-slate-900/60 border border-slate-800">
-          <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">Current Status</span>
+        <div className="p-5 rounded-xl bg-neutral-900/60 border border-neutral-800">
+          <span className="text-xs font-semibold uppercase tracking-wider text-neutral-400">Current Status</span>
           <div className="flex items-center justify-between mt-2">
             {latestCheck ? (
               latestCheck.is_up ? (
@@ -273,19 +273,19 @@ export const MonitorDetailPage: React.FC = () => {
                 </div>
               )
             ) : (
-              <span className="text-slate-500 text-base font-medium">Pending 1st check</span>
+              <span className="text-neutral-500 text-base font-medium">Pending 1st check</span>
             )}
             {latestCheck?.is_up ? (
               <Wifi className="h-5 w-5 text-emerald-500" />
             ) : (
-              <WifiOff className="h-5 w-5 text-slate-500" />
+              <WifiOff className="h-5 w-5 text-neutral-500" />
             )}
           </div>
         </div>
 
         {/* 24-Hour Uptime */}
-        <div className="p-5 rounded-xl bg-slate-900/60 border border-slate-800">
-          <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">24-Hour Uptime</span>
+        <div className="p-5 rounded-xl bg-neutral-900/60 border border-neutral-800">
+          <span className="text-xs font-semibold uppercase tracking-wider text-neutral-400">24-Hour Uptime</span>
           <div className="flex items-center justify-between mt-2">
             <span
               className={`text-2xl font-bold ${
@@ -298,13 +298,13 @@ export const MonitorDetailPage: React.FC = () => {
             >
               {stats ? `${stats.uptime_percentage}%` : "100%"}
             </span>
-            <span className="text-xs text-slate-500 font-mono">SLA Target: 99.9%</span>
+            <span className="text-xs text-neutral-500 font-mono">SLA Target: 99.9%</span>
           </div>
         </div>
 
         {/* Average Latency */}
-        <div className="p-5 rounded-xl bg-slate-900/60 border border-slate-800">
-          <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">Avg Response Time</span>
+        <div className="p-5 rounded-xl bg-neutral-900/60 border border-neutral-800">
+          <span className="text-xs font-semibold uppercase tracking-wider text-neutral-400">Avg Response Time</span>
           <div className="flex items-center justify-between mt-2">
             <span className="text-2xl font-bold text-white">
               {stats?.avg_response_time_ms ? `${stats.avg_response_time_ms} ms` : "—"}
@@ -314,12 +314,12 @@ export const MonitorDetailPage: React.FC = () => {
         </div>
 
         {/* Total / Failed Checks */}
-        <div className="p-5 rounded-xl bg-slate-900/60 border border-slate-800">
-          <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">24h Checks / Incidents</span>
+        <div className="p-5 rounded-xl bg-neutral-900/60 border border-neutral-800">
+          <span className="text-xs font-semibold uppercase tracking-wider text-neutral-400">24h Checks / Incidents</span>
           <div className="flex items-center justify-between mt-2">
             <span className="text-2xl font-bold text-white">
               {stats?.total_checks || 0}
-              <span className="text-sm font-normal text-slate-400"> / {stats?.failed_checks || 0} err</span>
+              <span className="text-sm font-normal text-neutral-400"> / {stats?.failed_checks || 0} err</span>
             </span>
             <span
               className={`h-2.5 w-2.5 rounded-full ${
@@ -331,11 +331,11 @@ export const MonitorDetailPage: React.FC = () => {
       </div>
 
       {/* Latency Telemetry Chart */}
-      <div className="rounded-2xl border border-slate-800 bg-slate-900/50 backdrop-blur-sm p-6 mb-8">
+      <div className="rounded-2xl border border-neutral-800 bg-neutral-900/50 backdrop-blur-sm p-6 mb-8">
         <div className="flex items-center justify-between mb-4">
           <div>
             <h2 className="text-base font-semibold text-white">Response Time Telemetry</h2>
-            <p className="text-xs text-slate-400 mt-0.5">Chronological latency graph (ms) across recorded checks</p>
+            <p className="text-xs text-neutral-400 mt-0.5">Chronological latency graph (ms) across recorded checks</p>
           </div>
           <div className="flex items-center space-x-2 text-xs text-emerald-400">
             <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
@@ -346,21 +346,21 @@ export const MonitorDetailPage: React.FC = () => {
       </div>
 
       {/* History Table */}
-      <div className="rounded-2xl border border-slate-800 bg-slate-900/50 backdrop-blur-sm overflow-hidden">
-        <div className="px-6 py-4 border-b border-slate-800 flex items-center justify-between">
+      <div className="rounded-2xl border border-neutral-800 bg-neutral-900/50 backdrop-blur-sm overflow-hidden">
+        <div className="px-6 py-4 border-b border-neutral-800 flex items-center justify-between">
           <h2 className="text-base font-semibold text-white">Recent Health Check History (Last 50)</h2>
-          <span className="text-xs text-slate-400 font-mono">Auto-updates on ping</span>
+          <span className="text-xs text-neutral-400 font-mono">Auto-updates on ping</span>
         </div>
 
         {history.length === 0 ? (
-          <div className="p-12 text-center text-slate-400">
-            <Activity className="h-8 w-8 mx-auto mb-2 text-slate-600" />
+          <div className="p-12 text-center text-neutral-400">
+            <Activity className="h-8 w-8 mx-auto mb-2 text-neutral-600" />
             <p className="text-sm">No health checks recorded yet. Waiting for next scheduled dispatch...</p>
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
-              <thead className="bg-slate-950/60 text-slate-400 uppercase text-[11px] font-semibold border-b border-slate-800 tracking-wider">
+              <thead className="bg-neutral-950/60 text-neutral-400 uppercase text-[11px] font-semibold border-b border-neutral-800 tracking-wider">
                 <tr>
                   <th className="px-6 py-3.5">Status</th>
                   <th className="px-6 py-3.5">Response Time</th>
@@ -369,9 +369,9 @@ export const MonitorDetailPage: React.FC = () => {
                   <th className="px-6 py-3.5">Message</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-800/60 font-mono text-xs">
+              <tbody className="divide-y divide-neutral-800/60 font-mono text-xs">
                 {history.map((check) => (
-                  <tr key={check.id} className="hover:bg-slate-800/30 transition">
+                  <tr key={check.id} className="hover:bg-neutral-800/30 transition">
                     <td className="px-6 py-3 whitespace-nowrap">
                       {check.is_up ? (
                         <span className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 text-[11px] font-sans font-medium border border-emerald-500/20">
@@ -385,24 +385,24 @@ export const MonitorDetailPage: React.FC = () => {
                         </span>
                       )}
                     </td>
-                    <td className="px-6 py-3 whitespace-nowrap text-slate-200">
+                    <td className="px-6 py-3 whitespace-nowrap text-neutral-200">
                       {check.response_time_ms !== null ? `${check.response_time_ms} ms` : "—"}
                     </td>
                     <td className="px-6 py-3 whitespace-nowrap">
                       <span
                         className={`px-2 py-0.5 rounded ${
                           check.status_code && check.status_code < 400
-                            ? "bg-slate-800 text-slate-200"
+                            ? "bg-neutral-800 text-neutral-200"
                             : "bg-rose-500/20 text-rose-300"
                         }`}
                       >
                         {check.status_code || "ERR"}
                       </span>
                     </td>
-                    <td className="px-6 py-3 whitespace-nowrap text-slate-400 font-sans">
+                    <td className="px-6 py-3 whitespace-nowrap text-neutral-400 font-sans">
                       {new Date(check.timestamp).toLocaleString()}
                     </td>
-                    <td className="px-6 py-3 text-slate-400 max-w-xs truncate font-sans text-xs">
+                    <td className="px-6 py-3 text-neutral-400 max-w-xs truncate font-sans text-xs">
                       {check.error_message || "Healthy"}
                     </td>
                   </tr>

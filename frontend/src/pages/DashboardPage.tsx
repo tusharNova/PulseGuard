@@ -99,27 +99,27 @@ export const DashboardPage: React.FC = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full text-left">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-8 border-b border-slate-800">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-8 border-b border-neutral-800">
         <div>
           <h1 className="text-2xl sm:text-3xl font-bold text-white tracking-tight flex items-center gap-3">
             <span>Monitors Overview</span>
             {isRefreshing && <Loader2 className="h-5 w-5 text-emerald-400 animate-spin" />}
           </h1>
-          <p className="text-slate-400 text-sm mt-1">Real-time health and uptime of your web endpoints</p>
+          <p className="text-neutral-400 text-sm mt-1">Real-time health and uptime of your web endpoints</p>
         </div>
         <div className="flex items-center gap-3">
           <button
             type="button"
             onClick={() => fetchMonitors(true)}
             disabled={isLoading || isRefreshing}
-            className="inline-flex items-center space-x-2 px-3.5 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 text-sm font-medium transition cursor-pointer disabled:opacity-50"
+            className="inline-flex items-center space-x-2 px-3.5 py-2.5 rounded-xl bg-neutral-900 hover:bg-neutral-800 text-neutral-300 hover:text-white border border-neutral-800 text-sm font-medium transition cursor-pointer disabled:opacity-50"
           >
             <RefreshCw className={`h-4 w-4 ${isRefreshing ? "animate-spin text-emerald-400" : ""}`} />
             <span className="hidden sm:inline">Refresh</span>
           </button>
           <Link
             to="/monitors/new"
-            className="inline-flex items-center space-x-2 px-4 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold text-sm shadow-lg shadow-emerald-500/20 transition cursor-pointer"
+            className="inline-flex items-center space-x-2 px-4 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-neutral-950 font-semibold text-sm shadow-lg shadow-emerald-500/20 transition cursor-pointer"
           >
             <Plus className="h-4 w-4" />
             <span>New Monitor</span>
@@ -129,28 +129,28 @@ export const DashboardPage: React.FC = () => {
 
       {/* KPI Stats Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-4 gap-5 my-8">
-        <div className="p-5 rounded-xl bg-slate-900/60 border border-slate-800 backdrop-blur-sm">
-          <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">Total Configured</span>
+        <div className="p-5 rounded-xl bg-neutral-900/60 border border-neutral-800 backdrop-blur-sm">
+          <span className="text-xs font-semibold uppercase tracking-wider text-neutral-400">Total Configured</span>
           <div className="flex items-center justify-between mt-2">
             <span className="text-2xl font-bold text-white">{totalCount}</span>
-            <Server className="h-5 w-5 text-slate-500" />
+            <Server className="h-5 w-5 text-neutral-500" />
           </div>
         </div>
-        <div className="p-5 rounded-xl bg-slate-900/60 border border-slate-800 backdrop-blur-sm">
+        <div className="p-5 rounded-xl bg-neutral-900/60 border border-neutral-800 backdrop-blur-sm">
           <span className="text-xs font-semibold uppercase tracking-wider text-emerald-400">Active Pinging</span>
           <div className="flex items-center justify-between mt-2">
             <span className="text-2xl font-bold text-emerald-400">{activeCount}</span>
             <Wifi className="h-5 w-5 text-emerald-500" />
           </div>
         </div>
-        <div className="p-5 rounded-xl bg-slate-900/60 border border-slate-800 backdrop-blur-sm">
+        <div className="p-5 rounded-xl bg-neutral-900/60 border border-neutral-800 backdrop-blur-sm">
           <span className="text-xs font-semibold uppercase tracking-wider text-amber-400">Paused</span>
           <div className="flex items-center justify-between mt-2">
             <span className="text-2xl font-bold text-amber-400">{pausedCount}</span>
             <WifiOff className="h-5 w-5 text-amber-500" />
           </div>
         </div>
-        <div className="p-5 rounded-xl bg-slate-900/60 border border-slate-800 backdrop-blur-sm">
+        <div className="p-5 rounded-xl bg-neutral-900/60 border border-neutral-800 backdrop-blur-sm">
           <span className="text-xs font-semibold uppercase tracking-wider text-teal-400">Check Frequency</span>
           <div className="flex items-center justify-between mt-2">
             <span className="text-2xl font-bold text-teal-400">60s</span>
@@ -181,29 +181,29 @@ export const DashboardPage: React.FC = () => {
           {[1, 2, 3].map((i) => (
             <div
               key={i}
-              className="h-48 rounded-2xl bg-slate-900/40 border border-slate-800 p-6 animate-pulse flex flex-col justify-between"
+              className="h-48 rounded-2xl bg-neutral-900/40 border border-neutral-800 p-6 animate-pulse flex flex-col justify-between"
             >
               <div className="space-y-3">
-                <div className="h-5 bg-slate-800 rounded w-2/3" />
-                <div className="h-4 bg-slate-800/60 rounded w-1/2" />
+                <div className="h-5 bg-neutral-800 rounded w-2/3" />
+                <div className="h-4 bg-neutral-800/60 rounded w-1/2" />
               </div>
-              <div className="h-4 bg-slate-800/40 rounded w-1/3" />
+              <div className="h-4 bg-neutral-800/40 rounded w-1/3" />
             </div>
           ))}
         </div>
       ) : monitors.length === 0 ? (
         /* Empty State */
-        <div className="rounded-2xl border border-slate-800/80 bg-slate-900/30 p-12 text-center">
-          <div className="inline-flex h-12 w-12 rounded-xl bg-slate-800/80 items-center justify-center text-slate-400 mb-3">
+        <div className="rounded-2xl border border-neutral-800/80 bg-neutral-900/30 p-12 text-center">
+          <div className="inline-flex h-12 w-12 rounded-xl bg-neutral-800/80 items-center justify-center text-neutral-400 mb-3">
             <Activity className="h-6 w-6" />
           </div>
           <h3 className="text-white font-semibold text-lg">No monitors configured yet</h3>
-          <p className="text-slate-400 text-sm max-w-sm mx-auto mt-1 mb-6">
+          <p className="text-neutral-400 text-sm max-w-sm mx-auto mt-1 mb-6">
             Add your first website, API endpoint, or service to start continuous 60-second health checks.
           </p>
           <Link
             to="/monitors/new"
-            className="inline-flex items-center space-x-2 px-5 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold text-sm shadow-lg shadow-emerald-500/20 transition cursor-pointer"
+            className="inline-flex items-center space-x-2 px-5 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-neutral-950 font-semibold text-sm shadow-lg shadow-emerald-500/20 transition cursor-pointer"
           >
             <Plus className="h-4 w-4" />
             <span>Add First Monitor</span>
@@ -215,7 +215,7 @@ export const DashboardPage: React.FC = () => {
           {monitors.map((monitor) => (
             <div
               key={monitor.id}
-              className="rounded-2xl border border-slate-800 bg-slate-900/50 hover:border-slate-700 transition p-6 flex flex-col justify-between backdrop-blur-sm group"
+              className="rounded-2xl border border-neutral-800 bg-neutral-900/50 hover:border-neutral-700 transition p-6 flex flex-col justify-between backdrop-blur-sm group"
             >
               <div>
                 <div className="flex items-start justify-between gap-3 mb-3">
@@ -227,7 +227,7 @@ export const DashboardPage: React.FC = () => {
                       href={monitor.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center space-x-1 text-slate-400 hover:text-slate-200 text-xs truncate max-w-full mt-0.5"
+                      className="inline-flex items-center space-x-1 text-neutral-400 hover:text-neutral-200 text-xs truncate max-w-full mt-0.5"
                     >
                       <span className="truncate">{monitor.url}</span>
                       <ExternalLink className="h-3 w-3 shrink-0" />
@@ -237,32 +237,32 @@ export const DashboardPage: React.FC = () => {
                     className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium shrink-0 ${
                       monitor.is_active
                         ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
-                        : "bg-slate-800 text-slate-400 border border-slate-700"
+                        : "bg-neutral-800 text-neutral-400 border border-neutral-700"
                     }`}
                   >
                     <span
                       className={`h-1.5 w-1.5 rounded-full mr-1.5 ${
-                        monitor.is_active ? "bg-emerald-400 animate-pulse" : "bg-slate-500"
+                        monitor.is_active ? "bg-emerald-400 animate-pulse" : "bg-neutral-500"
                       }`}
                     />
                     {monitor.is_active ? "Active" : "Paused"}
                   </span>
                 </div>
 
-                <div className="flex items-center gap-2 mt-4 text-xs text-slate-400">
-                  <span className="px-2 py-0.5 rounded bg-slate-800/80 font-mono text-[11px] uppercase">
+                <div className="flex items-center gap-2 mt-4 text-xs text-neutral-400">
+                  <span className="px-2 py-0.5 rounded bg-neutral-800/80 font-mono text-[11px] uppercase">
                     {monitor.monitor_type}
                   </span>
                   <span>•</span>
                   <span>Every {monitor.interval}s</span>
                 </div>
 
-                <div className="mt-4 pt-3 border-t border-slate-800/50">
+                <div className="mt-4 pt-3 border-t border-neutral-800/50">
                   <StatusBar checks={monitor.recent_checks || []} maxBars={20} showLabels={false} />
                 </div>
               </div>
 
-              <div className="mt-6 pt-4 border-t border-slate-800/80 flex items-center justify-between">
+              <div className="mt-6 pt-4 border-t border-neutral-800/80 flex items-center justify-between">
                 <Link
                   to={`/monitors/${monitor.id}`}
                   className="inline-flex items-center space-x-1 text-xs font-semibold text-emerald-400 hover:text-emerald-300 transition"
@@ -277,7 +277,7 @@ export const DashboardPage: React.FC = () => {
                     onClick={() => handleToggleActive(monitor)}
                     disabled={togglingId === monitor.id}
                     title={monitor.is_active ? "Pause Monitoring" : "Resume Monitoring"}
-                    className="p-1.5 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition disabled:opacity-50 cursor-pointer"
+                    className="p-1.5 text-neutral-400 hover:text-white hover:bg-neutral-800 rounded-lg transition disabled:opacity-50 cursor-pointer"
                   >
                     {togglingId === monitor.id ? (
                       <Loader2 className="h-4 w-4 animate-spin text-emerald-400" />
@@ -292,7 +292,7 @@ export const DashboardPage: React.FC = () => {
                     onClick={() => handleDelete(monitor.id, monitor.name)}
                     disabled={deletingId === monitor.id}
                     title="Delete Monitor"
-                    className="p-1.5 text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 rounded-lg transition disabled:opacity-50 cursor-pointer"
+                    className="p-1.5 text-neutral-400 hover:text-rose-400 hover:bg-rose-500/10 rounded-lg transition disabled:opacity-50 cursor-pointer"
                   >
                     {deletingId === monitor.id ? (
                       <Loader2 className="h-4 w-4 animate-spin text-rose-400" />

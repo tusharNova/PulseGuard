@@ -29,7 +29,7 @@ export const StatusBar: React.FC<StatusBarProps> = React.memo(({
         {emptyBars.map((i) => (
           <div
             key={`empty-${i}`}
-            className="flex-1 h-full rounded-[3px] bg-slate-800/40 border border-slate-800/60"
+            className="flex-1 h-full rounded-[3px] bg-neutral-800/40 border border-neutral-800/60"
             title="Pending check"
           />
         ))}
@@ -50,15 +50,15 @@ export const StatusBar: React.FC<StatusBarProps> = React.memo(({
             >
               {/* Tooltip on hover */}
               <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:flex flex-col items-center z-50 pointer-events-none">
-                <div className="bg-slate-900 border border-slate-700 text-white px-2.5 py-1.5 rounded-lg shadow-xl text-[11px] whitespace-nowrap font-sans">
+                <div className="bg-neutral-900 border border-neutral-700 text-white px-2.5 py-1.5 rounded-lg shadow-xl text-[11px] whitespace-nowrap font-sans">
                   <div className="flex items-center space-x-1.5">
                     <span className={`h-1.5 w-1.5 rounded-full ${check.is_up ? "bg-emerald-400" : "bg-rose-400"}`} />
                     <span className="font-semibold">{statusText}</span>
-                    <span className="text-slate-400 font-mono text-[10px]">({latencyText})</span>
+                    <span className="text-neutral-400 font-mono text-[10px]">({latencyText})</span>
                   </div>
-                  <div className="text-slate-400 text-[10px] mt-0.5">{formattedDate}</div>
+                  <div className="text-neutral-400 text-[10px] mt-0.5">{formattedDate}</div>
                 </div>
-                <div className="w-2 h-2 bg-slate-900 border-r border-b border-slate-700 rotate-45 -mt-1" />
+                <div className="w-2 h-2 bg-neutral-900 border-r border-b border-neutral-700 rotate-45 -mt-1" />
               </div>
             </div>
           );
@@ -67,10 +67,10 @@ export const StatusBar: React.FC<StatusBarProps> = React.memo(({
 
       {/* Label row */}
       {showLabels && (
-        <div className="flex items-center justify-between text-[11px] text-slate-500 mt-2 font-medium">
+        <div className="flex items-center justify-between text-[11px] text-neutral-500 mt-2 font-medium">
           <span>{displayChecks.length > 0 ? `${displayChecks.length} checks ago` : "Waiting for checks"}</span>
           {uptimePercentage !== undefined && (
-            <span className="text-slate-300 font-semibold">{uptimePercentage}% uptime</span>
+            <span className="text-neutral-300 font-semibold">{uptimePercentage}% uptime</span>
           )}
           <span>Today</span>
         </div>

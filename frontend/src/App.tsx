@@ -16,7 +16,7 @@ export const App: React.FC = () => {
   return (
     <BrowserRouter>
       <AuthProvider>
-        <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans">
+        <div className="min-h-screen bg-neutral-950 text-neutral-100 flex flex-col font-sans">
           <Toaster
             position="bottom-right"
             toastOptions={{

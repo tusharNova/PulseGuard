@@ -85,18 +85,18 @@ export const MonitorForm: React.FC<MonitorFormProps> = ({
     <form onSubmit={handleSubmit} className="space-y-6">
       {/* Friendly Name */}
       <div>
-        <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-2">
+        <label className="block text-xs font-semibold uppercase tracking-wider text-neutral-300 mb-2">
           Monitor Name
         </label>
         <div className="relative">
-          <Activity className="absolute left-3.5 top-3 h-5 w-5 text-slate-500" />
+          <Activity className="absolute left-3.5 top-3 h-5 w-5 text-neutral-500" />
           <input
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="e.g. Production Web App"
-            className={`w-full bg-slate-950 border rounded-xl px-4 py-2.5 pl-11 text-white placeholder-slate-500 text-sm focus:outline-none transition ${
-              errors.name ? "border-rose-500" : "border-slate-800 focus:border-emerald-500"
+            className={`w-full bg-neutral-950 border rounded-xl px-4 py-2.5 pl-11 text-white placeholder-neutral-500 text-sm focus:outline-none transition ${
+              errors.name ? "border-rose-500" : "border-neutral-800 focus:border-emerald-500"
             }`}
           />
         </div>
@@ -110,18 +110,18 @@ export const MonitorForm: React.FC<MonitorFormProps> = ({
 
       {/* URL Endpoint */}
       <div>
-        <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-2">
+        <label className="block text-xs font-semibold uppercase tracking-wider text-neutral-300 mb-2">
           Endpoint URL
         </label>
         <div className="relative">
-          <Globe className="absolute left-3.5 top-3 h-5 w-5 text-slate-500" />
+          <Globe className="absolute left-3.5 top-3 h-5 w-5 text-neutral-500" />
           <input
             type="text"
             value={url}
             onChange={(e) => setUrl(e.target.value)}
             placeholder="https://api.myproject.io/health"
-            className={`w-full bg-slate-950 border rounded-xl px-4 py-2.5 pl-11 text-white placeholder-slate-500 text-sm focus:outline-none transition font-mono ${
-              errors.url ? "border-rose-500" : "border-slate-800 focus:border-emerald-500"
+            className={`w-full bg-neutral-950 border rounded-xl px-4 py-2.5 pl-11 text-white placeholder-neutral-500 text-sm focus:outline-none transition font-mono ${
+              errors.url ? "border-rose-500" : "border-neutral-800 focus:border-emerald-500"
             }`}
           />
         </div>
@@ -131,7 +131,7 @@ export const MonitorForm: React.FC<MonitorFormProps> = ({
             <span>{errors.url}</span>
           </p>
         ) : (
-          <p className="mt-1.5 text-xs text-slate-500">
+          <p className="mt-1.5 text-xs text-neutral-500">
             Enter the full HTTP or HTTPS endpoint you want PulseGuard to ping every interval.
           </p>
         )}
@@ -140,7 +140,7 @@ export const MonitorForm: React.FC<MonitorFormProps> = ({
       {/* Protocol & Interval Row */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
-          <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-2">
+          <label className="block text-xs font-semibold uppercase tracking-wider text-neutral-300 mb-2">
             Protocol
           </label>
           <div className="grid grid-cols-2 gap-2">
@@ -150,7 +150,7 @@ export const MonitorForm: React.FC<MonitorFormProps> = ({
               className={`py-2.5 rounded-xl border text-xs font-semibold transition cursor-pointer flex items-center justify-center space-x-1.5 ${
                 monitorType === "HTTPS"
                   ? "bg-emerald-500/10 border-emerald-500/40 text-emerald-400"
-                  : "bg-slate-950 border-slate-800 text-slate-400 hover:text-white"
+                  : "bg-neutral-950 border-neutral-800 text-neutral-400 hover:text-white"
               }`}
             >
               {monitorType === "HTTPS" && <Check className="h-3.5 w-3.5" />}
@@ -162,7 +162,7 @@ export const MonitorForm: React.FC<MonitorFormProps> = ({
               className={`py-2.5 rounded-xl border text-xs font-semibold transition cursor-pointer flex items-center justify-center space-x-1.5 ${
                 monitorType === "HTTP"
                   ? "bg-emerald-500/10 border-emerald-500/40 text-emerald-400"
-                  : "bg-slate-950 border-slate-800 text-slate-400 hover:text-white"
+                  : "bg-neutral-950 border-neutral-800 text-neutral-400 hover:text-white"
               }`}
             >
               {monitorType === "HTTP" && <Check className="h-3.5 w-3.5" />}
@@ -172,15 +172,15 @@ export const MonitorForm: React.FC<MonitorFormProps> = ({
         </div>
 
         <div>
-          <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-2">
+          <label className="block text-xs font-semibold uppercase tracking-wider text-neutral-300 mb-2">
             Ping Interval
           </label>
           <div className="relative">
-            <Sliders className="absolute left-3.5 top-3 h-5 w-5 text-slate-500" />
+            <Sliders className="absolute left-3.5 top-3 h-5 w-5 text-neutral-500" />
             <select
               value={interval}
               onChange={(e) => setInterval(Number(e.target.value))}
-              className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 pl-11 text-white text-sm focus:outline-none focus:border-emerald-500 transition cursor-pointer"
+              className="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-4 py-2.5 pl-11 text-white text-sm focus:outline-none focus:border-emerald-500 transition cursor-pointer"
             >
               <option value={10}>Every 10 seconds (High frequency)</option>
               <option value={30}>Every 30 seconds</option>
@@ -199,10 +199,10 @@ export const MonitorForm: React.FC<MonitorFormProps> = ({
       </div>
 
       {/* Active State Toggle */}
-      <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between">
+      <div className="p-4 rounded-xl bg-neutral-950 border border-neutral-800 flex items-center justify-between">
         <div>
           <span className="text-sm font-semibold text-white">Enable Immediate Monitoring</span>
-          <p className="text-xs text-slate-400 mt-0.5">
+          <p className="text-xs text-neutral-400 mt-0.5">
             When enabled, background Celery workers will start checking this endpoint right away.
           </p>
         </div>
@@ -213,18 +213,18 @@ export const MonitorForm: React.FC<MonitorFormProps> = ({
             onChange={(e) => setIsActive(e.target.checked)}
             className="sr-only peer"
           />
-          <div className="w-11 h-6 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-500" />
+          <div className="w-11 h-6 bg-neutral-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-500" />
         </label>
       </div>
 
       {/* Form Action Buttons */}
-      <div className="flex items-center justify-end space-x-3 pt-4 border-t border-slate-800">
+      <div className="flex items-center justify-end space-x-3 pt-4 border-t border-neutral-800">
         {onCancel && (
           <button
             type="button"
             onClick={onCancel}
             disabled={isSubmitting}
-            className="px-5 py-2.5 rounded-xl border border-slate-800 hover:bg-slate-800 text-slate-300 hover:text-white text-sm font-medium transition cursor-pointer"
+            className="px-5 py-2.5 rounded-xl border border-neutral-800 hover:bg-neutral-800 text-neutral-300 hover:text-white text-sm font-medium transition cursor-pointer"
           >
             Cancel
           </button>
@@ -232,7 +232,7 @@ export const MonitorForm: React.FC<MonitorFormProps> = ({
         <button
           type="submit"
           disabled={isSubmitting}
-          className="px-6 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 disabled:opacity-50 text-slate-950 font-bold text-sm shadow-lg shadow-emerald-500/20 transition cursor-pointer flex items-center space-x-2"
+          className="px-6 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 disabled:opacity-50 text-neutral-950 font-bold text-sm shadow-lg shadow-emerald-500/20 transition cursor-pointer flex items-center space-x-2"
         >
           {isSubmitting ? (
             <>
