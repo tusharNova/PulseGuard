@@ -23,7 +23,7 @@ class Monitor(models.Model):
         default=Protocol.HTTPS,
     )
     interval = models.PositiveIntegerField(
-        default=60,
+        default=10,
         help_text="Monitoring interval in seconds",
     )
     is_active = models.BooleanField(default=True)

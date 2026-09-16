@@ -153,7 +153,7 @@ export const DashboardPage: React.FC = () => {
         <div className="p-5 rounded-xl bg-neutral-900/60 border border-neutral-800 backdrop-blur-sm">
           <span className="text-xs font-semibold uppercase tracking-wider text-teal-400">Check Frequency</span>
           <div className="flex items-center justify-between mt-2">
-            <span className="text-2xl font-bold text-teal-400">60s</span>
+            <span className="text-2xl font-bold text-teal-400">10s</span>
             <Clock className="h-5 w-5 text-teal-500" />
           </div>
         </div>

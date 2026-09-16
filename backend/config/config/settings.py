@@ -190,9 +190,9 @@ CELERY_TASK_TRACK_STARTED = True
 
 # Celery Beat: Periodic task schedule
 CELERY_BEAT_SCHEDULE = {
-    "dispatch-active-monitors-every-60s": {
+    "dispatch-active-monitors-every-10s": {
         "task": "monitoring.tasks.dispatch_active_monitors_task",
-        "schedule": 60.0,  # Run every 60 seconds
+        "schedule": 10.0,  # Run every 10 seconds
     },
 }
 
