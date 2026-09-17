@@ -141,9 +141,10 @@ def dispatch_active_monitors_task():
     monitor_ids = list(
         Monitor.objects.filter(is_active=True).values_list("id", flat=True)
     )
-    logger.info(f"Celery Beat: Dispatching health checks for {len(monitor_ids)} active monitor(s)")
+    logger.info(
+        f"Celery Beat: Dispatching health checks for {len(monitor_ids)} active monitor(s)"
+    )
     for monitor_id in monitor_ids:
         ping_monitor_task.delay(str(monitor_id))
 
     return {"dispatched": len(monitor_ids)}
-
