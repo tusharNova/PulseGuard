@@ -13,7 +13,7 @@ export interface AuthTokens {
   refresh: string;
 }
 
-export type MonitorProtocol = "HTTP" | "HTTPS";
+export type MonitorProtocol = "HTTP" | "HTTPS" | "REDIS" | "SMTP" | "CELERY";
 
 export interface Monitor {
   id: string;
@@ -65,4 +65,17 @@ export interface NotificationChannel {
   is_active: boolean;
   created_at: string;
   updated_at: string;
+}
+
+export interface MonitorAnalytics {
+  errors: Array<{
+    status_code: number | null;
+    error_message: string;
+    count: number;
+  }>;
+  latency_distribution: {
+    fast: number;
+    average: number;
+    slow: number;
+  };
 }

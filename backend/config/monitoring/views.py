@@ -49,6 +49,49 @@ class MonitorViewSet(viewsets.ModelViewSet):
         serializer = CheckResultSerializer(results, many=True)
         return Response(serializer.data)
 
+    @action(detail=True, methods=["get"], url_path="analytics")
+    def analytics(self, request, pk=None):
+        """
+        Returns rich analytics for the monitor (error breakdowns and latency buckets).
+        """
+        monitor = self.get_object()
+        last_30_days = timezone.now() - datetime.timedelta(days=30)
+        qs = monitor.check_results.filter(timestamp__gte=last_30_days)
+
+        # Error Breakdown
+        errors = (
+            qs.filter(is_up=False)
+            .values("status_code", "error_message")
+            .annotate(count=Count("id"))
+            .order_by("-count")[:10]
+        )
+
+        # Simple Latency Distribution (last 1000 checks)
+        recent_qs = qs.order_by("-timestamp")[:1000]
+        fast = 0
+        average = 0
+        slow = 0
+
+        for c in recent_qs:
+            if c.response_time_ms is not None:
+                if c.response_time_ms < 300:
+                    fast += 1
+                elif c.response_time_ms < 1000:
+                    average += 1
+                else:
+                    slow += 1
+
+        return Response(
+            {
+                "errors": list(errors),
+                "latency_distribution": {
+                    "fast": fast,
+                    "average": average,
+                    "slow": slow,
+                },
+            }
+        )
+
     @action(detail=True, methods=["get"], url_path="alerts")
     def alerts(self, request, pk=None):
         """

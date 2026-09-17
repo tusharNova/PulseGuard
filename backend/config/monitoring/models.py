@@ -9,6 +9,9 @@ class Monitor(models.Model):
     class Protocol(models.TextChoices):
         HTTP = "HTTP", "HTTP"
         HTTPS = "HTTPS", "HTTPS"
+        REDIS = "REDIS", "REDIS"
+        SMTP = "SMTP", "SMTP"
+        CELERY = "CELERY", "CELERY"
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.ForeignKey(
@@ -17,7 +20,7 @@ class Monitor(models.Model):
         related_name="monitors",
     )
     name = models.CharField(max_length=120)
-    url = models.URLField()
+    url = models.CharField(max_length=255, help_text="URL, IP, or connection string")
     monitor_type = models.CharField(
         max_length=10,
         choices=Protocol.choices,
