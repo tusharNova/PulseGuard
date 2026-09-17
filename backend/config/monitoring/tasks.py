@@ -1,7 +1,9 @@
 import logging
 import time
+
 import requests
 from celery import shared_task
+
 from .models import Alert, CheckResult, Monitor
 from .notifications import send_monitor_down_alert, send_monitor_up_alert
 

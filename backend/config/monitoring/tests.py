@@ -1,5 +1,6 @@
 import datetime
 from unittest import mock
+
 import requests
 from django.contrib.auth import get_user_model
 from django.core import mail
@@ -7,6 +8,7 @@ from django.urls import reverse
 from django.utils import timezone
 from rest_framework import status
 from rest_framework.test import APITestCase
+
 from .models import Alert, CheckResult, Monitor
 from .tasks import dispatch_active_monitors_task, ping_monitor_task
 
@@ -142,8 +144,9 @@ class MonitorAPITests(APITestCase):
             name="Payment API",
             url="https://pay.gateway.io",
         )
-        from django.utils import timezone
         import datetime
+
+        from django.utils import timezone
 
         now = timezone.now()
         # Create 3 check results with distinct timestamps

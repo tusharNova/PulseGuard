@@ -1,9 +1,11 @@
 import datetime
+
 from django.db.models import Avg, Count, Prefetch, Q
 from django.utils import timezone
 from rest_framework import permissions, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
+
 from .models import CheckResult, Monitor
 from .serializers import AlertSerializer, CheckResultSerializer, MonitorSerializer
 
