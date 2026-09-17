@@ -36,13 +36,15 @@ export const MonitorDetailPage: React.FC = () => {
   const [isToggling, setIsToggling] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
-  const fetchMonitorData = useCallback(async (showRefreshingSpinner = false) => {
+  const fetchMonitorData = useCallback(async (showRefreshingSpinner = false, isPolling = false) => {
     if (!id) return;
 
-    if (showRefreshingSpinner) {
-      setIsRefreshing(true);
-    } else {
-      setIsLoading(true);
+    if (!isPolling) {
+      if (showRefreshingSpinner) {
+        setIsRefreshing(true);
+      } else {
+        setIsLoading(true);
+      }
     }
     setError(null);
 
@@ -61,13 +63,20 @@ export const MonitorDetailPage: React.FC = () => {
         err.response?.data?.detail || "Failed to load monitor details. It may not exist or has been deleted."
       );
     } finally {
-      setIsLoading(false);
-      setIsRefreshing(false);
+      if (!isPolling) {
+        setIsLoading(false);
+        setIsRefreshing(false);
+      }
     }
   }, [id]);
 
   useEffect(() => {
     fetchMonitorData();
+    // Auto-refresh every 10 seconds silently
+    const interval = setInterval(() => {
+      fetchMonitorData(false, true);
+    }, 10000);
+    return () => clearInterval(interval);
   }, [fetchMonitorData]);
 
   const handleToggle = async () => {

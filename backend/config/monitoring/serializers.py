@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Alert, CheckResult, Monitor
+from .models import Alert, CheckResult, Monitor, NotificationChannel
 
 
 class AlertSerializer(serializers.ModelSerializer):
@@ -62,4 +62,25 @@ class MonitorSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 "Monitoring interval must be at least 10 seconds."
             )
+        return value
+
+
+class NotificationChannelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = NotificationChannel
+        fields = (
+            "id",
+            "name",
+            "channel_type",
+            "config",
+            "is_active",
+            "created_at",
+            "updated_at",
+        )
+        read_only_fields = ("id", "created_at", "updated_at")
+
+    def validate_config(self, value):
+        # Optional: Add validation based on channel_type if needed.
+        if not isinstance(value, dict):
+            raise serializers.ValidationError("Config must be a valid JSON object.")
         return value

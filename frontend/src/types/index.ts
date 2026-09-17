@@ -54,3 +54,15 @@ export interface PaginatedResponse<T> {
   previous: string | null;
   results: T[];
 }
+
+export type ChannelType = "SLACK" | "TELEGRAM" | "DISCORD" | "WEBHOOK";
+
+export interface NotificationChannel {
+  id: string;
+  name: string;
+  channel_type: ChannelType;
+  config: Record<string, any>;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}

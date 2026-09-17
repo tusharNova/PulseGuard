@@ -6,8 +6,13 @@ from rest_framework import permissions, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from .models import CheckResult, Monitor
-from .serializers import AlertSerializer, CheckResultSerializer, MonitorSerializer
+from .models import CheckResult, Monitor, NotificationChannel
+from .serializers import (
+    AlertSerializer,
+    CheckResultSerializer,
+    MonitorSerializer,
+    NotificationChannelSerializer,
+)
 
 
 class MonitorViewSet(viewsets.ModelViewSet):
@@ -104,3 +109,18 @@ class CheckResultViewSet(viewsets.ReadOnlyModelViewSet):
         if monitor_id:
             queryset = queryset.filter(monitor_id=monitor_id)
         return queryset
+
+
+class NotificationChannelViewSet(viewsets.ModelViewSet):
+    """
+    CRUD for NotificationChannels (Slack, Telegram, etc.)
+    """
+
+    serializer_class = NotificationChannelSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return NotificationChannel.objects.filter(user=self.request.user)
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)

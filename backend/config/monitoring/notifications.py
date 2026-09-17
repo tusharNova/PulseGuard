@@ -1,22 +1,65 @@
 import logging
 
+import requests
 from django.conf import settings
 from django.core.mail import send_mail
 
 logger = logging.getLogger(__name__)
 
 
+def dispatch_plugin_alerts(monitor, alert, subject: str, message: str):
+    """
+    Dispatches alerts to all active NotificationChannels for the monitor's user.
+    """
+    channels = monitor.user.notification_channels.filter(is_active=True)
+    for channel in channels:
+        try:
+            if channel.channel_type == "SLACK":
+                webhook_url = channel.config.get("webhook_url")
+                if webhook_url:
+                    requests.post(
+                        webhook_url, json={"text": f"*{subject}*\n{message}"}, timeout=5
+                    )
+            elif channel.channel_type == "TELEGRAM":
+                bot_token = channel.config.get("bot_token")
+                chat_id = channel.config.get("chat_id")
+                if bot_token and chat_id:
+                    url = f"https://api.telegram.org/bot{bot_token}/sendMessage"
+                    requests.post(
+                        url,
+                        json={"chat_id": chat_id, "text": f"{subject}\n\n{message}"},
+                        timeout=5,
+                    )
+            elif channel.channel_type == "DISCORD":
+                webhook_url = channel.config.get("webhook_url")
+                if webhook_url:
+                    requests.post(
+                        webhook_url,
+                        json={"content": f"**{subject}**\n{message}"},
+                        timeout=5,
+                    )
+            elif channel.channel_type == "WEBHOOK":
+                webhook_url = channel.config.get("webhook_url")
+                if webhook_url:
+                    requests.post(
+                        webhook_url,
+                        json={
+                            "subject": subject,
+                            "message": message,
+                            "monitor_id": str(monitor.id),
+                        },
+                        timeout=5,
+                    )
+        except Exception as e:
+            logger.error(
+                f"Failed to send alert to channel {channel.name} ({channel.channel_type}): {e}"
+            )
+
+
 def send_monitor_down_alert(monitor, alert) -> bool:
     """
-    Dispatches a 'Site DOWN' incident notification email to the monitor owner.
+    Dispatches a 'Site DOWN' incident notification to the monitor owner.
     """
-    user_email = monitor.user.email
-    if not user_email or not getattr(monitor.user, "email_alerts_enabled", True):
-        logger.debug(
-            f"Skipping DOWN alert email for monitor {monitor.id}: email not set or alerts disabled"
-        )
-        return False
-
     subject = f"🚨 [DOWN ALERT] {monitor.name} is unreachable"
     message = (
         f"Hello,\n\n"
@@ -29,6 +72,16 @@ def send_monitor_down_alert(monitor, alert) -> bool:
         f"We will automatically notify you the moment your service recovers.\n\n"
         f"— Team PulseGuard\n"
     )
+
+    # Dispatch to external plugins (Slack, Telegram, etc.)
+    dispatch_plugin_alerts(monitor, alert, subject, message)
+
+    user_email = monitor.user.email
+    if not user_email or not getattr(monitor.user, "email_alerts_enabled", True):
+        logger.debug(
+            f"Skipping DOWN alert email for monitor {monitor.id}: email not set or alerts disabled"
+        )
+        return False
 
     try:
         send_mail(
@@ -47,15 +100,8 @@ def send_monitor_down_alert(monitor, alert) -> bool:
 
 def send_monitor_up_alert(monitor, alert) -> bool:
     """
-    Dispatches a 'Site RECOVERED' resolution notification email to the monitor owner.
+    Dispatches a 'Site RECOVERED' resolution notification to the monitor owner.
     """
-    user_email = monitor.user.email
-    if not user_email or not getattr(monitor.user, "email_alerts_enabled", True):
-        logger.debug(
-            f"Skipping UP recovery email for monitor {monitor.id}: email not set or alerts disabled"
-        )
-        return False
-
     subject = f"✅ [RECOVERED] {monitor.name} is back online"
     message = (
         f"Great news!\n\n"
@@ -67,6 +113,16 @@ def send_monitor_up_alert(monitor, alert) -> bool:
         f"The previous incident has been marked as resolved.\n\n"
         f"— Team PulseGuard\n"
     )
+
+    # Dispatch to external plugins (Slack, Telegram, etc.)
+    dispatch_plugin_alerts(monitor, alert, subject, message)
+
+    user_email = monitor.user.email
+    if not user_email or not getattr(monitor.user, "email_alerts_enabled", True):
+        logger.debug(
+            f"Skipping UP recovery email for monitor {monitor.id}: email not set or alerts disabled"
+        )
+        return False
 
     try:
         send_mail(

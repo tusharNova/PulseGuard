@@ -30,11 +30,13 @@ export const DashboardPage: React.FC = () => {
   const [togglingId, setTogglingId] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
-  const fetchMonitors = useCallback(async (showRefreshingSpinner = false) => {
-    if (showRefreshingSpinner) {
-      setIsRefreshing(true);
-    } else {
-      setIsLoading(true);
+  const fetchMonitors = useCallback(async (showRefreshingSpinner = false, isPolling = false) => {
+    if (!isPolling) {
+      if (showRefreshingSpinner) {
+        setIsRefreshing(true);
+      } else {
+        setIsLoading(true);
+      }
     }
     setError(null);
 
@@ -47,13 +49,20 @@ export const DashboardPage: React.FC = () => {
         err.response?.data?.detail || "Failed to load monitors. Please check your server connection."
       );
     } finally {
-      setIsLoading(false);
-      setIsRefreshing(false);
+      if (!isPolling) {
+        setIsLoading(false);
+        setIsRefreshing(false);
+      }
     }
   }, []);
 
   useEffect(() => {
     fetchMonitors();
+    // Auto-refresh every 10 seconds silently
+    const interval = setInterval(() => {
+      fetchMonitors(false, true);
+    }, 10000);
+    return () => clearInterval(interval);
   }, [fetchMonitors]);
 
   const handleToggleActive = async (monitor: Monitor) => {
