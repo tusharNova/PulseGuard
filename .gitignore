@@ -30,6 +30,7 @@ Thumbs.db
 *.log
 logs/
 backend/config/logs/
+job-logs.txt
 
 # Python cache
 .pytest_cache/
