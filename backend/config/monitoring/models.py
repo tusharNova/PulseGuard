@@ -9,6 +9,9 @@ class Monitor(models.Model):
     class Protocol(models.TextChoices):
         HTTP = "HTTP", "HTTP"
         HTTPS = "HTTPS", "HTTPS"
+        REDIS = "REDIS", "REDIS"
+        SMTP = "SMTP", "SMTP"
+        CELERY = "CELERY", "CELERY"
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.ForeignKey(
@@ -17,7 +20,7 @@ class Monitor(models.Model):
         related_name="monitors",
     )
     name = models.CharField(max_length=120)
-    url = models.URLField()
+    url = models.CharField(max_length=255, help_text="URL, IP, or connection string")
     monitor_type = models.CharField(
         max_length=10,
         choices=Protocol.choices,
@@ -98,3 +101,35 @@ class Alert(models.Model):
 
     def __str__(self):
         return f"[{self.alert_type}] {self.monitor.name} - {self.created_at}"
+
+
+class NotificationChannel(models.Model):
+    class ChannelType(models.TextChoices):
+        SLACK = "SLACK", "Slack Webhook"
+        TELEGRAM = "TELEGRAM", "Telegram"
+        DISCORD = "DISCORD", "Discord Webhook"
+        WEBHOOK = "WEBHOOK", "Custom Webhook"
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="notification_channels",
+    )
+    name = models.CharField(max_length=120)
+    channel_type = models.CharField(
+        max_length=20,
+        choices=ChannelType.choices,
+    )
+    config = models.JSONField(
+        help_text="Configuration for the channel (e.g., {'webhook_url': '...'} or {'bot_token': '...', 'chat_id': '...'})"
+    )
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return f"{self.name} ({self.get_channel_type_display()})"

@@ -24,22 +24,25 @@ import { StatusBar } from "../components/StatusBar";
 export const DashboardPage: React.FC = () => {
   const [monitors, setMonitors] = useState<Monitor[]>([]);
   const [totalCount, setTotalCount] = useState(0);
+  const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [togglingId, setTogglingId] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
-  const fetchMonitors = useCallback(async (showRefreshingSpinner = false) => {
-    if (showRefreshingSpinner) {
-      setIsRefreshing(true);
-    } else {
-      setIsLoading(true);
+  const fetchMonitors = useCallback(async (showRefreshingSpinner = false, isPolling = false) => {
+    if (!isPolling) {
+      if (showRefreshingSpinner) {
+        setIsRefreshing(true);
+      } else {
+        setIsLoading(true);
+      }
     }
     setError(null);
 
     try {
-      const data = await monitorsApi.getMonitors();
+      const data = await monitorsApi.getMonitors(page);
       setMonitors(data.results);
       setTotalCount(data.count);
     } catch (err: any) {
@@ -47,13 +50,20 @@ export const DashboardPage: React.FC = () => {
         err.response?.data?.detail || "Failed to load monitors. Please check your server connection."
       );
     } finally {
-      setIsLoading(false);
-      setIsRefreshing(false);
+      if (!isPolling) {
+        setIsLoading(false);
+        setIsRefreshing(false);
+      }
     }
-  }, []);
+  }, [page]);
 
   useEffect(() => {
     fetchMonitors();
+    // Auto-refresh every 10 seconds silently
+    const interval = setInterval(() => {
+      fetchMonitors(false, true);
+    }, 10000);
+    return () => clearInterval(interval);
   }, [fetchMonitors]);
 
   const handleToggleActive = async (monitor: Monitor) => {
@@ -304,6 +314,31 @@ export const DashboardPage: React.FC = () => {
               </div>
             </div>
           ))}
+        </div>
+      )}
+
+      {/* Pagination Controls */}
+      {totalCount > 20 && (
+        <div className="mt-8 flex items-center justify-between">
+          <span className="text-sm text-neutral-400">
+            Showing {((page - 1) * 20) + 1} to {Math.min(page * 20, totalCount)} of {totalCount} monitors
+          </span>
+          <div className="flex items-center space-x-2">
+            <button
+              onClick={() => setPage((p) => Math.max(1, p - 1))}
+              disabled={page === 1}
+              className="px-4 py-2 rounded-xl bg-neutral-900 border border-neutral-800 text-sm font-semibold text-neutral-300 hover:text-white hover:bg-neutral-800 transition disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Previous
+            </button>
+            <button
+              onClick={() => setPage((p) => p + 1)}
+              disabled={page * 20 >= totalCount}
+              className="px-4 py-2 rounded-xl bg-neutral-900 border border-neutral-800 text-sm font-semibold text-neutral-300 hover:text-white hover:bg-neutral-800 transition disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Next
+            </button>
+          </div>
         </div>
       )}
     </div>

@@ -11,6 +11,7 @@ import {
 import toast from "react-hot-toast";
 import { authApi } from "../api/auth";
 import { useAuth } from "../context/AuthContext";
+import { NotificationChannelsSettings } from "../components/NotificationChannelsSettings";
 
 export const SettingsPage: React.FC = () => {
   const { user } = useAuth();
@@ -164,6 +165,8 @@ export const SettingsPage: React.FC = () => {
               </label>
             </div>
           </div>
+
+          <NotificationChannelsSettings />
 
           {/* Save Button */}
           <div className="flex items-center justify-end space-x-3 pt-6 border-t border-neutral-800">

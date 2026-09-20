@@ -1,8 +1,13 @@
 import logging
+import smtplib
+import socket
 import time
+from urllib.parse import urlparse
 
 import requests
 from celery import shared_task
+
+from config.celery import app as celery_app
 
 from .models import Alert, CheckResult, Monitor
 from .notifications import send_monitor_down_alert, send_monitor_up_alert
@@ -13,7 +18,7 @@ logger = logging.getLogger("monitoring")
 @shared_task(bind=True, max_retries=1)
 def ping_monitor_task(self, monitor_id):
     """
-    Asynchronous Celery task that executes an HTTP GET health check for a monitor,
+    Asynchronous Celery task that executes health checks (HTTP, REDIS, SMTP, CELERY),
     measures latency, captures failures/timeouts, detects state transitions (UP/DOWN),
     triggers alert events, and records a CheckResult.
     """
@@ -33,51 +38,98 @@ def ping_monitor_task(self, monitor_id):
     is_up = False
     error_message = ""
 
-    logger.info(f"Checking monitor '{monitor.name}' (ID: {monitor.id}, URL: {url})")
+    logger.info(
+        f"Checking monitor '{monitor.name}' (ID: {monitor.id}, Protocol: {monitor.monitor_type}, Target: {url})"
+    )
 
     start_time = time.perf_counter()
     try:
-        response = requests.get(
-            url,
-            timeout=10,
-            headers={"User-Agent": "PulseGuard-Uptime-Bot/1.0"},
-        )
+        if monitor.monitor_type in [Monitor.Protocol.HTTP, Monitor.Protocol.HTTPS]:
+            response = requests.get(
+                url,
+                timeout=10,
+                headers={"User-Agent": "PulseGuard-Uptime-Bot/1.0"},
+            )
+            status_code = response.status_code
+            is_up = 200 <= status_code < 400
+            if not is_up:
+                error_message = f"HTTP status code {status_code}"
+
+        elif monitor.monitor_type == Monitor.Protocol.REDIS:
+            parsed = urlparse(url) if "://" in url else urlparse(f"redis://{url}")
+            host = parsed.hostname or url
+            port = parsed.port or 6379
+
+            with socket.create_connection((host, port), timeout=5) as s:
+                s.sendall(b"*1\r\n$4\r\nPING\r\n")
+                resp = s.recv(1024)
+                if b"+PONG" in resp:
+                    is_up = True
+                    status_code = 200
+                else:
+                    is_up = False
+                    error_message = "Redis did not reply with PONG"
+
+        elif monitor.monitor_type == Monitor.Protocol.SMTP:
+            parsed = urlparse(url) if "://" in url else urlparse(f"smtp://{url}")
+            host = parsed.hostname or url
+            port = parsed.port or 25
+
+            with smtplib.SMTP(host, port, timeout=10) as server:
+                code, msg = server.noop()
+                if code == 250:
+                    is_up = True
+                    status_code = 200
+                else:
+                    is_up = False
+                    error_message = f"SMTP replied with code {code}"
+
+        elif monitor.monitor_type == Monitor.Protocol.CELERY:
+            inspector = celery_app.control.inspect(timeout=5.0)
+            pings = inspector.ping()
+            if pings and len(pings) > 0:
+                is_up = True
+                status_code = 200
+            else:
+                is_up = False
+                error_message = "No Celery workers responded to ping broadcast"
+
         elapsed = time.perf_counter() - start_time
         response_time_ms = round(elapsed * 1000, 2)
-        status_code = response.status_code
-        is_up = 200 <= status_code < 400
 
-        if not is_up:
-            error_message = f"HTTP status code {status_code}"
-            logger.warning(
-                f"Monitor '{monitor.name}' returned non-success HTTP status {status_code} ({response_time_ms}ms)"
-            )
-        else:
+        if not is_up and not error_message:
+            error_message = "Health check failed"
+            logger.warning(f"Monitor '{monitor.name}' failed ({response_time_ms}ms)")
+        elif is_up:
             logger.info(
-                f"Monitor '{monitor.name}' is UP (status: {status_code}, latency: {response_time_ms}ms)"
+                f"Monitor '{monitor.name}' is UP (latency: {response_time_ms}ms)"
             )
 
     except requests.exceptions.Timeout:
         elapsed = time.perf_counter() - start_time
         response_time_ms = round(elapsed * 1000, 2)
         is_up = False
-        error_message = "Request timed out (exceeded 10 seconds)"
-        logger.warning(f"Monitor '{monitor.name}' timed out after {response_time_ms}ms")
-
-    except requests.exceptions.SSLError as e:
-        is_up = False
-        error_message = f"SSL verification failed: {str(e)}"
-        logger.warning(f"Monitor '{monitor.name}' SSL verification failed: {e}")
-
-    except requests.exceptions.ConnectionError as e:
-        is_up = False
-        error_message = f"Connection failed (DNS failure or unreachable host): {str(e)}"
-        logger.warning(f"Monitor '{monitor.name}' connection failed: {e}")
-
+        error_message = "HTTP Request timed out (exceeded 10 seconds)"
     except requests.exceptions.RequestException as e:
+        elapsed = time.perf_counter() - start_time
+        response_time_ms = round(elapsed * 1000, 2)
         is_up = False
-        error_message = f"Request error: {str(e)}"
-        logger.warning(f"Monitor '{monitor.name}' request exception: {e}")
+        error_message = f"HTTP Request failed: {str(e)}"
+    except socket.timeout:
+        elapsed = time.perf_counter() - start_time
+        response_time_ms = round(elapsed * 1000, 2)
+        is_up = False
+        error_message = "TCP Connection timed out"
+    except socket.error as e:
+        elapsed = time.perf_counter() - start_time
+        response_time_ms = round(elapsed * 1000, 2)
+        is_up = False
+        error_message = f"TCP Connection failed: {str(e)}"
+    except Exception as e:
+        elapsed = time.perf_counter() - start_time
+        response_time_ms = round(elapsed * 1000, 2)
+        is_up = False
+        error_message = f"Unexpected error: {str(e)}"
 
     # Detect state transition (UP -> DOWN or DOWN -> UP) before recording new check
     last_check = monitor.check_results.first()

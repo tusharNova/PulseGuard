@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Activity, AlertCircle, Check, Globe, Loader2, Sliders } from "lucide-react";
 import type { CreateMonitorPayload } from "../api/monitors";
+import type { MonitorProtocol } from "../types";
 
 interface MonitorFormProps {
   initialValues?: Partial<CreateMonitorPayload>;
@@ -19,7 +20,7 @@ export const MonitorForm: React.FC<MonitorFormProps> = ({
 }) => {
   const [name, setName] = useState(initialValues?.name || "");
   const [url, setUrl] = useState(initialValues?.url || "");
-  const [monitorType, setMonitorType] = useState<"HTTP" | "HTTPS">(
+  const [monitorType, setMonitorType] = useState<MonitorProtocol>(
     initialValues?.monitor_type || "HTTPS"
   );
   const [interval, setInterval] = useState<number>(initialValues?.interval || 60);
@@ -35,6 +36,10 @@ export const MonitorForm: React.FC<MonitorFormProps> = ({
       setMonitorType("HTTP");
     } else if (url.startsWith("https://") && monitorType !== "HTTPS") {
       setMonitorType("HTTPS");
+    } else if (url.startsWith("redis://") && monitorType !== "REDIS") {
+      setMonitorType("REDIS");
+    } else if (url.startsWith("smtp://") && monitorType !== "SMTP") {
+      setMonitorType("SMTP");
     }
   }, [url, monitorType]);
 
@@ -48,16 +53,19 @@ export const MonitorForm: React.FC<MonitorFormProps> = ({
     }
 
     if (!url.trim()) {
-      newErrors.url = "Endpoint URL is required.";
+      newErrors.url = "Endpoint or connection string is required.";
     } else {
-      try {
-        const parsed = new URL(url.trim());
-        if (!["http:", "https:"].includes(parsed.protocol)) {
-          newErrors.url = "URL must start with http:// or https://";
+      if (monitorType === "HTTP" || monitorType === "HTTPS") {
+        try {
+          const parsed = new URL(url.trim());
+          if (!["http:", "https:"].includes(parsed.protocol)) {
+            newErrors.url = "URL must start with http:// or https://";
+          }
+        } catch {
+          newErrors.url = "Please enter a valid URL (e.g., https://api.mysite.com).";
         }
-      } catch {
-        newErrors.url = "Please enter a valid, well-formed URL (e.g., https://api.mysite.com).";
       }
+      // For Redis, Celery, SMTP, any string is fine (we'll parse it on the backend)
     }
 
     if (!interval || interval < 10) {
@@ -119,7 +127,12 @@ export const MonitorForm: React.FC<MonitorFormProps> = ({
             type="text"
             value={url}
             onChange={(e) => setUrl(e.target.value)}
-            placeholder="https://api.myproject.io/health"
+            placeholder={
+              monitorType === "REDIS" ? "redis://localhost:6379" :
+              monitorType === "SMTP" ? "smtp.gmail.com:587" :
+              monitorType === "CELERY" ? "redis://localhost:6379/0" :
+              "https://api.myproject.io/health"
+            }
             className={`w-full bg-neutral-950 border rounded-xl px-4 py-2.5 pl-11 text-white placeholder-neutral-500 text-sm focus:outline-none transition font-mono ${
               errors.url ? "border-rose-500" : "border-neutral-800 focus:border-emerald-500"
             }`}
@@ -132,7 +145,9 @@ export const MonitorForm: React.FC<MonitorFormProps> = ({
           </p>
         ) : (
           <p className="mt-1.5 text-xs text-neutral-500">
-            Enter the full HTTP or HTTPS endpoint you want PulseGuard to ping every interval.
+            {monitorType === "HTTP" || monitorType === "HTTPS"
+              ? "Enter the full HTTP or HTTPS endpoint you want PulseGuard to ping every interval."
+              : "Enter the IP, hostname, port, or connection string for the service."}
           </p>
         )}
       </div>
@@ -143,31 +158,22 @@ export const MonitorForm: React.FC<MonitorFormProps> = ({
           <label className="block text-xs font-semibold uppercase tracking-wider text-neutral-300 mb-2">
             Protocol
           </label>
-          <div className="grid grid-cols-2 gap-2">
-            <button
-              type="button"
-              onClick={() => setMonitorType("HTTPS")}
-              className={`py-2.5 rounded-xl border text-xs font-semibold transition cursor-pointer flex items-center justify-center space-x-1.5 ${
-                monitorType === "HTTPS"
-                  ? "bg-emerald-500/10 border-emerald-500/40 text-emerald-400"
-                  : "bg-neutral-950 border-neutral-800 text-neutral-400 hover:text-white"
-              }`}
-            >
-              {monitorType === "HTTPS" && <Check className="h-3.5 w-3.5" />}
-              <span>HTTPS (SSL)</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => setMonitorType("HTTP")}
-              className={`py-2.5 rounded-xl border text-xs font-semibold transition cursor-pointer flex items-center justify-center space-x-1.5 ${
-                monitorType === "HTTP"
-                  ? "bg-emerald-500/10 border-emerald-500/40 text-emerald-400"
-                  : "bg-neutral-950 border-neutral-800 text-neutral-400 hover:text-white"
-              }`}
-            >
-              {monitorType === "HTTP" && <Check className="h-3.5 w-3.5" />}
-              <span>HTTP</span>
-            </button>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+            {(["HTTPS", "HTTP", "REDIS", "SMTP", "CELERY"] as MonitorProtocol[]).map((proto) => (
+              <button
+                key={proto}
+                type="button"
+                onClick={() => setMonitorType(proto)}
+                className={`py-2 rounded-xl border text-[11px] font-semibold transition cursor-pointer flex items-center justify-center space-x-1 ${
+                  monitorType === proto
+                    ? "bg-emerald-500/10 border-emerald-500/40 text-emerald-400"
+                    : "bg-neutral-950 border-neutral-800 text-neutral-400 hover:text-white"
+                }`}
+              >
+                {monitorType === proto && <Check className="h-3 w-3" />}
+                <span>{proto}</span>
+              </button>
+            ))}
           </div>
         </div>
 

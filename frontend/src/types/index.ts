@@ -13,7 +13,7 @@ export interface AuthTokens {
   refresh: string;
 }
 
-export type MonitorProtocol = "HTTP" | "HTTPS";
+export type MonitorProtocol = "HTTP" | "HTTPS" | "REDIS" | "SMTP" | "CELERY";
 
 export interface Monitor {
   id: string;
@@ -53,4 +53,29 @@ export interface PaginatedResponse<T> {
   next: string | null;
   previous: string | null;
   results: T[];
+}
+
+export type ChannelType = "SLACK" | "TELEGRAM" | "DISCORD" | "WEBHOOK";
+
+export interface NotificationChannel {
+  id: string;
+  name: string;
+  channel_type: ChannelType;
+  config: Record<string, any>;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface MonitorAnalytics {
+  errors: Array<{
+    status_code: number | null;
+    error_message: string;
+    count: number;
+  }>;
+  latency_distribution: {
+    fast: number;
+    average: number;
+    slow: number;
+  };
 }

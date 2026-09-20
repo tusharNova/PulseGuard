@@ -21,6 +21,7 @@ import { monitorsApi } from "../api/monitors";
 import type { CheckResult, Monitor, UptimeStats } from "../types";
 import { LatencyChart } from "../components/LatencyChart";
 import { StatusBar } from "../components/StatusBar";
+import { AnalyticsDashboard } from "../components/AnalyticsDashboard";
 
 export const MonitorDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -29,6 +30,9 @@ export const MonitorDetailPage: React.FC = () => {
   const [monitor, setMonitor] = useState<Monitor | null>(null);
   const [stats, setStats] = useState<UptimeStats | null>(null);
   const [history, setHistory] = useState<CheckResult[]>([]);
+  const [analytics, setAnalytics] = useState<any>(null);
+  const [historyPage, setHistoryPage] = useState(1);
+  const [historyTotal, setHistoryTotal] = useState(0);
 
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -36,38 +40,50 @@ export const MonitorDetailPage: React.FC = () => {
   const [isToggling, setIsToggling] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
-  const fetchMonitorData = useCallback(async (showRefreshingSpinner = false) => {
+  const fetchMonitorData = useCallback(async (showRefreshingSpinner = false, isPolling = false) => {
     if (!id) return;
 
-    if (showRefreshingSpinner) {
-      setIsRefreshing(true);
-    } else {
-      setIsLoading(true);
+    if (!isPolling) {
+      if (showRefreshingSpinner) {
+        setIsRefreshing(true);
+      } else {
+        setIsLoading(true);
+      }
     }
     setError(null);
 
     try {
-      const [monitorData, statsData, historyData] = await Promise.all([
+      const [monitorData, statsData, historyData, analyticsData] = await Promise.all([
         monitorsApi.getMonitor(id),
         monitorsApi.getMonitorUptimeStats(id),
-        monitorsApi.getMonitorHistory(id),
+        monitorsApi.getMonitorHistory(id, historyPage),
+        monitorsApi.getMonitorAnalytics(id),
       ]);
 
       setMonitor(monitorData);
       setStats(statsData);
-      setHistory(historyData);
+      setHistory(historyData.results);
+      setHistoryTotal(historyData.count);
+      setAnalytics(analyticsData);
     } catch (err: any) {
       setError(
         err.response?.data?.detail || "Failed to load monitor details. It may not exist or has been deleted."
       );
     } finally {
-      setIsLoading(false);
-      setIsRefreshing(false);
+      if (!isPolling) {
+        setIsLoading(false);
+        setIsRefreshing(false);
+      }
     }
-  }, [id]);
+  }, [id, historyPage]);
 
   useEffect(() => {
     fetchMonitorData();
+    // Auto-refresh every 10 seconds silently
+    const interval = setInterval(() => {
+      fetchMonitorData(false, true);
+    }, 10000);
+    return () => clearInterval(interval);
   }, [fetchMonitorData]);
 
   const handleToggle = async () => {
@@ -345,6 +361,9 @@ export const MonitorDetailPage: React.FC = () => {
         <LatencyChart data={history} />
       </div>
 
+      {/* Analytics Charts */}
+      <AnalyticsDashboard analytics={analytics} />
+
       {/* History Table */}
       <div className="rounded-2xl border border-neutral-800 bg-neutral-900/50 backdrop-blur-sm overflow-hidden">
         <div className="px-6 py-4 border-b border-neutral-800 flex items-center justify-between">
@@ -409,6 +428,31 @@ export const MonitorDetailPage: React.FC = () => {
                 ))}
               </tbody>
             </table>
+          </div>
+        )}
+
+        {/* Pagination Controls */}
+        {historyTotal > 20 && (
+          <div className="px-6 py-4 border-t border-neutral-800 flex items-center justify-between">
+            <span className="text-xs text-neutral-400">
+              Showing {((historyPage - 1) * 20) + 1} to {Math.min(historyPage * 20, historyTotal)} of {historyTotal} checks
+            </span>
+            <div className="flex items-center space-x-2">
+              <button
+                onClick={() => setHistoryPage((p) => Math.max(1, p - 1))}
+                disabled={historyPage === 1}
+                className="px-3 py-1.5 rounded-lg bg-neutral-900 border border-neutral-800 text-xs font-semibold text-neutral-300 hover:text-white hover:bg-neutral-800 transition disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                Previous
+              </button>
+              <button
+                onClick={() => setHistoryPage((p) => p + 1)}
+                disabled={historyPage * 20 >= historyTotal}
+                className="px-3 py-1.5 rounded-lg bg-neutral-900 border border-neutral-800 text-xs font-semibold text-neutral-300 hover:text-white hover:bg-neutral-800 transition disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                Next
+              </button>
+            </div>
           </div>
         )}
       </div>
