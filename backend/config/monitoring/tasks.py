@@ -6,7 +6,6 @@ from urllib.parse import urlparse
 
 import requests
 from celery import shared_task
-
 from config.celery import app as celery_app
 
 from .models import Alert, CheckResult, Monitor
@@ -109,12 +108,26 @@ def ping_monitor_task(self, monitor_id):
         elapsed = time.perf_counter() - start_time
         response_time_ms = round(elapsed * 1000, 2)
         is_up = False
-        error_message = "HTTP Request timed out (exceeded 10 seconds)"
+        error_message = "Request timed out (exceeded 10 seconds)"
+        logger.warning(f"Monitor '{monitor.name}' timed out after {response_time_ms}ms")
+    except requests.exceptions.SSLError as e:
+        elapsed = time.perf_counter() - start_time
+        response_time_ms = round(elapsed * 1000, 2)
+        is_up = False
+        error_message = f"SSL verification failed: {str(e)}"
+        logger.warning(f"Monitor '{monitor.name}' SSL verification failed: {e}")
+    except requests.exceptions.ConnectionError as e:
+        elapsed = time.perf_counter() - start_time
+        response_time_ms = round(elapsed * 1000, 2)
+        is_up = False
+        error_message = f"Connection failed (DNS failure or unreachable host): {str(e)}"
+        logger.warning(f"Monitor '{monitor.name}' connection failed: {e}")
     except requests.exceptions.RequestException as e:
         elapsed = time.perf_counter() - start_time
         response_time_ms = round(elapsed * 1000, 2)
         is_up = False
-        error_message = f"HTTP Request failed: {str(e)}"
+        error_message = f"Request error: {str(e)}"
+        logger.warning(f"Monitor '{monitor.name}' request exception: {e}")
     except socket.timeout:
         elapsed = time.perf_counter() - start_time
         response_time_ms = round(elapsed * 1000, 2)
